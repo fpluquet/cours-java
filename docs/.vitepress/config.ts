@@ -5,6 +5,7 @@ import { withMermaid } from "vitepress-plugin-mermaid";
 export default withMermaid({
   title: 'Cours de Java',
   description: 'Support de cours Java, JavaFX, MVC et Design Patterns',
+  base: '/cours-java/',
   themeConfig: {
     sidebar: [
       {
