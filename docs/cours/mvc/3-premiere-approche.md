@@ -43,6 +43,7 @@ public class PersonneViewConsole {
 }
 ```
 
+
 > **Info :**
 > On peut facilement créer d'autres vues (ex : graphique, web) qui utilisent le même modèle !
 
