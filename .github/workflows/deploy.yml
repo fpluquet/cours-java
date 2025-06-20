@@ -22,11 +22,10 @@ jobs:
 
       - name: Build VitePress site
         run: npm run build
-        working-directory: ./cours-java-site
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./cours-java-site/.vitepress/dist
+          publish_dir: ./docs/.vitepress/dist
           exclude_assets: .github
