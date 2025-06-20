@@ -8,6 +8,7 @@ En génie logiciel, un **design pattern** (ou patron de conception) est une solu
 > - la solution générique,
 > - les conséquences de son utilisation.
 
+
 ## Pourquoi utiliser les design patterns ?
 - **Réutilisabilité** : On évite de réinventer la roue.
 - **Lisibilité** : Les développeurs comprennent plus vite le rôle d'une structure connue.
