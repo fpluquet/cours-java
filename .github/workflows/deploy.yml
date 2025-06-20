@@ -14,6 +14,7 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        working-directory: ./cours-java-site
         with:
           node-version: '20'
 
@@ -22,10 +23,11 @@ jobs:
 
       - name: Build VitePress site
         run: npm run build
+        working-directory: ./cours-java-site
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .vitepress/dist
+          publish_dir: ./cours-java-site/.vitepress/dist
           exclude_assets: .github
