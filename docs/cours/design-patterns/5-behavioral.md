@@ -2,8 +2,9 @@
 
 Les patterns comportementaux facilitent la communication entre objets et la répartition des responsabilités. Ils permettent de rendre les interactions plus souples, découplées et évolutives.
 
-> **Info :**
-> Utilisez ces patterns pour organiser la logique métier et la communication entre objets sans créer de dépendances fortes.
+::: info
+Utilisez ces patterns pour organiser la logique métier et la communication entre objets sans créer de dépendances fortes.
+:::
 
 ## Observer
 Le pattern Observer permet à un objet (le sujet) de notifier automatiquement ses observateurs lorsqu'un changement d'état survient. Cela permet de mettre en place des systèmes réactifs et découplés.
@@ -64,8 +65,9 @@ sujet.ajouter(o);
 sujet.changerEtat("Nouveau!");
 ```
 
-> **À retenir :**
-> L'observateur permet de réagir automatiquement à des changements sans couplage fort.
+::: tip
+À retenir : L'observateur permet de réagir automatiquement à des changements sans couplage fort.
+:::
 
 ## Strategy
 Permet de changer dynamiquement l'algorithme utilisé par un objet.
@@ -680,10 +682,12 @@ sequenceDiagram
 
 On voit ici que l'action est déterminée par le type de l'objet et le type de l'interaction, permettant ainsi un comportement flexible et extensible.
 
-> **À retenir :**
-> Le double dispatch permet de gérer des interactions complexes entre types, en déléguant la logique de décision à des classes spécifiques. Cela rend le code plus flexible et extensible, car on peut ajouter de nouveaux types d'interactions sans modifier les classes existantes.
+::: tip
+À retenir : Le double dispatch permet de gérer des interactions complexes entre types, en déléguant la logique de décision à des classes spécifiques. Cela rend le code plus flexible et extensible, car on peut ajouter de nouveaux types d'interactions sans modifier les classes existantes.
+:::
 
 
 
-> **À retenir :**
-> Ces patterns avancés permettent de structurer des systèmes complexes et évolutifs.
+::: tip
+À retenir : Ces patterns avancés permettent de structurer des systèmes complexes et évolutifs.
+:::

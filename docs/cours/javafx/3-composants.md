@@ -2,8 +2,9 @@
 
 JavaFX propose de nombreux composants graphiques (boutons, champs de texte, listes, tableaux, etc.) pour construire des interfaces riches et interactives. Comprendre ces composants et savoir les manipuler est essentiel pour créer des applications ergonomiques et modernes.
 
-> **Info :**
-> Un composant JavaFX est un objet visuel que l’on peut placer, configurer et manipuler dans une fenêtre. Il existe des composants de base (boutons, champs de texte, etc.) et des conteneurs (layouts) pour organiser ces éléments.
+::: info
+Un composant JavaFX est un objet visuel que l’on peut placer, configurer et manipuler dans une fenêtre. Il existe des composants de base (boutons, champs de texte, etc.) et des conteneurs (layouts) pour organiser ces éléments.
+:::
 
 ## Les boutons
 
@@ -28,8 +29,9 @@ b.setOnAction(new EventHandler<ActionEvent>() {
 b.setOnAction(event -> System.out.println("Hello"));
 ```
 
-> **Astuce :**
-> Utilise les lambdas pour un code plus lisible et concis !
+::: tip
+Utilise les lambdas pour un code plus lisible et concis !
+:::
 
 Pour aller plus loin : [Documentation officielle des boutons JavaFX](https://openjfx.io/javadoc/18/javafx.controls/javafx/scene/control/Button.html)
 
@@ -49,8 +51,9 @@ TextArea ta = new TextArea();
 ta.setPromptText("Votre message");
 ```
 
-> **Astuce :**
-> Utilise `setPromptText` pour afficher un texte d'aide dans le champ.
+::: tip
+Utilise `setPromptText` pour afficher un texte d'aide dans le champ.
+:::
 
 ## Les cases à cocher et boutons radio
 
@@ -67,8 +70,9 @@ rb1.setToggleGroup(group);
 rb2.setToggleGroup(group);
 ```
 
-> **Astuce :**
-> Les boutons radio doivent être regroupés avec `ToggleGroup` pour garantir qu'un seul soit sélectionné.
+::: tip
+Les boutons radio doivent être regroupés avec `ToggleGroup` pour garantir qu'un seul soit sélectionné.
+:::
 
 ## Les listes et menus déroulants
 
@@ -86,8 +90,9 @@ ListView<String> list = new ListView<>();
 list.getItems().addAll("Un", "Deux", "Trois");
 ```
 
-> **Astuce :**
-> Utilise `getItems().addAll(...)` pour remplir rapidement une liste ou un menu.
+::: tip
+Utilise `getItems().addAll(...)` pour remplir rapidement une liste ou un menu.
+:::
 
 ## Les tables
 
@@ -100,8 +105,9 @@ TableColumn<Person, String> col = new TableColumn<>("Nom");
 table.getColumns().add(col);
 ```
 
-> **Astuce :**
-> Les tables sont puissantes mais nécessitent de définir des colonnes et un modèle de données.
+::: tip
+Les tables sont puissantes mais nécessitent de définir des colonnes et un modèle de données.
+:::
 
 ## Les sliders et barres de progression
 
@@ -116,8 +122,9 @@ ProgressBar pb = new ProgressBar(0.5); // 50%
 ProgressIndicator pi = new ProgressIndicator();
 ```
 
-> **Astuce :**
-> Les sliders sont utiles pour régler un volume, une luminosité, etc.
+::: tip
+Les sliders sont utiles pour régler un volume, une luminosité, etc.
+:::
 
 ## Les images et médias
 
@@ -128,8 +135,9 @@ Pour afficher une image dans l’interface :
 ImageView iv = new ImageView(new Image("fichier.png"));
 ```
 
-> **Astuce :**
-> Tu peux redimensionner une image avec `setFitWidth` et `setFitHeight`.
+::: tip
+Tu peux redimensionner une image avec `setFitWidth` et `setFitHeight`.
+:::
 
 ## Les alertes et boîtes de dialogue
 
@@ -144,8 +152,9 @@ alert.setContentText("Message d'information");
 alert.showAndWait();
 ```
 
-> **Astuce :**
-> Utilise les alertes pour informer, avertir ou demander une action à l'utilisateur.
+::: tip
+Utilise les alertes pour informer, avertir ou demander une action à l'utilisateur.
+:::
 
 ## ColorPicker
 
@@ -174,8 +183,10 @@ new Circle(200, 200, 200, Color.GREEN); // centreX, centreY, rayon, couleur
 new Rectangle(200, 200, 200, 200, Color.GREEN);
 ```
 
-> **Astuce :**
-> Les formes sont idéales pour illustrer, dessiner ou créer des jeux simples.
+::: tip
+Les formes sont idéales pour illustrer, dessiner ou créer des jeux simples.
+:::
 
-> **Astuce :**
-> Consulte la documentation officielle JavaFX pour découvrir d'autres composants avancés (TreeView, WebView, ColorPicker, DatePicker, etc.) et leurs possibilités !
+::: tip
+Consulte la documentation officielle JavaFX pour découvrir d'autres composants avancés (TreeView, WebView, ColorPicker, DatePicker, etc.) et leurs possibilités !
+:::

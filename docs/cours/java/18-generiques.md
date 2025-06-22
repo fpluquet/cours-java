@@ -2,13 +2,17 @@
 
 Les classes génériques sont un concept fondamental en Java pour écrire du code réutilisable, sûr et flexible. Elles permettent de définir des classes, interfaces ou méthodes qui fonctionnent avec différents types, tout en conservant la sécurité de typage.
 
-> **À retenir :** Les génériques évitent les conversions de type (cast) et les erreurs à l’exécution, en permettant de spécifier le type dès la compilation.
+::: tip À retenir
+Les génériques évitent les conversions de type (cast) et les erreurs à l’exécution, en permettant de spécifier le type dès la compilation.
+:::
 
 ## C'est quoi ?
 
 Les classes génériques permettent de définir des classes et des méthodes paramétrées par un ou plusieurs types. On utilise des chevrons `<T>`, où `T` est un paramètre de type (on peut aussi utiliser `E`, `K`, `V`, etc.).
 
-> **Info :** Le nom du type générique est libre, mais par convention on utilise une lettre majuscule (T pour Type, E pour Element, K pour Key, V pour Value…)
+::: info
+Le nom du type générique est libre, mais par convention on utilise une lettre majuscule (T pour Type, E pour Element, K pour Key, V pour Value…)
+:::
 
 ## Exemple
 
@@ -36,9 +40,10 @@ System.out.println(boiteStr.get()); // Affiche Hello
 
 Dans cet exemple, la classe `Boite` peut contenir n’importe quel type d’objet, sans perdre la sécurité de typage.
 
-> **Pédagogie :**
-> - Si vous essayez de faire `boiteInt.set("texte")`, vous aurez une erreur de compilation : le type est vérifié dès la compilation.
-> - Les génériques sont très utilisés dans les collections (`ArrayList<T>`, `HashMap<K,V>`, etc.).
+::: tip Important
+- Si vous essayez de faire `boiteInt.set("texte")`, vous aurez une erreur de compilation : le type est vérifié dès la compilation.
+- Les génériques sont très utilisés dans les collections (`ArrayList<T>`, `HashMap<K,V>`, etc.).
+:::
 
 ## Aller plus loin : les bornes (borned types)
 
@@ -69,7 +74,9 @@ System.out.println(boiteInt.getDoubleValue()); // Affiche 42.0
 
 Ici, `BoiteNombre<T extends Number>` signifie que T doit être une sous-classe de `Number` (comme `Integer`, `Double`, etc.). On peut donc utiliser les méthodes de `Number` sur `contenu`.
 
-> **Info :** On peut aussi utiliser `T extends UneInterface` pour forcer le type à implémenter une interface.
+::: info
+On peut aussi utiliser `T extends UneInterface` pour forcer le type à implémenter une interface.
+:::
 
 ### Exemple : plusieurs bornes
 

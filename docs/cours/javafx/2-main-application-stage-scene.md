@@ -7,8 +7,9 @@ Dans JavaFX, la structure d'une application graphique repose sur quelques concep
 - **Scene** : représente le contenu affiché dans une fenêtre (`Stage`). On peut changer la scène d'un stage à tout moment.
 - **Node** : tout élément graphique (bouton, texte, forme, conteneur, etc.) est un `Node`. Les nodes forment un arbre hiérarchique.
 
-> **Info :**
-> Pense à la hiérarchie suivante : **Application** > **Stage** (fenêtre) > **Scene** (contenu) > **Node** (éléments graphiques). C'est la base de toute interface JavaFX.
+::: info
+Pense à la hiérarchie suivante : **Application** > **Stage** (fenêtre) > **Scene** (contenu) > **Node** (éléments graphiques). C'est la base de toute interface JavaFX.
+:::
 
 ## Différence entre `Application`, `Stage`, `Scene` et `Node`
 
@@ -19,8 +20,9 @@ Dans JavaFX, la structure d'une application graphique repose sur quelques concep
 
 ![Hiérarchie des noeuds JavaFX](https://amyfowlersblog.files.wordpress.com/2011/06/javafx2-0layoutclasses.png)
 
-> **À retenir :**
-> Le layout manager (gestionnaire de disposition) utilisé dans la scène influence la manière dont les éléments sont redimensionnés. Par exemple, un `VBox` ou un `GridPane` ne gèrent pas la taille de leurs enfants de la même façon.
+::: warning
+Le layout manager (gestionnaire de disposition) utilisé dans la scène influence la manière dont les éléments sont redimensionnés. Par exemple, un `VBox` ou un `GridPane` ne gèrent pas la taille de leurs enfants de la même façon.
+:::
 
 ## La méthode `launch`
 
@@ -55,8 +57,10 @@ public void start(Stage primaryStage) throws Exception {
 - On peut y attacher une scène (`primaryStage.setScene(...)`), définir son titre, sa taille, etc.
 - On peut créer d'autres stages pour afficher des fenêtres secondaires.
 
-> **Info :**
-> Le paramètre `primaryStage` est la fenêtre principale de l'application. Tu peux en créer d'autres si besoin (pour des boîtes de dialogue, des popups, etc.).
+::: info
+Le paramètre `primaryStage` est la fenêtre principale de l'application. Tu peux en créer d'autres si besoin (pour des boîtes de dialogue, des popups, etc.).
+:::
 
-> **À retenir :**
-> La méthode `start` est le point d'entrée graphique de toute application JavaFX. C'est ici que commence la vie de l'interface !
+::: tip
+La méthode `start` est le point d'entrée graphique de toute application JavaFX. C'est ici que commence la vie de l'interface !
+:::

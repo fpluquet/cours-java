@@ -2,8 +2,9 @@
 
 L'architecture **MVC** (Modèle-Vue-Contrôleur) est un pilier de la conception logicielle moderne. Elle vise à séparer les différentes responsabilités d'une application pour la rendre plus claire, plus robuste et plus facile à faire évoluer.
 
-> **Info :**
-> MVC n'est pas réservé aux grandes applications ! Même pour de petits projets, réfléchir à la séparation des rôles aide à prendre de bonnes habitudes de code.
+::: info
+MVC n'est pas réservé aux grandes applications ! Même pour de petits projets, réfléchir à la séparation des rôles aide à prendre de bonnes habitudes de code.
+:::
 
 ![Architecture](/images/Model-View-Controller_architectural_pattern-fr.svg)
 
@@ -25,8 +26,9 @@ Nous verrons aussi comment cette architecture améliore la qualité du code grâ
 
 Le **modèle** est le cœur de l'application : il représente les données et la logique métier. Il ne s'occupe ni de l'affichage, ni de la gestion des interactions utilisateur.
 
-> **À retenir :**
-> Le modèle doit être indépendant de l'interface graphique. Cela permet de le réutiliser ou de le tester facilement.
+::: warning
+Le modèle doit être indépendant de l'interface graphique. Cela permet de le réutiliser ou de le tester facilement.
+:::
 
 Exemple simple en Java :
 
@@ -60,8 +62,9 @@ Le modèle ne doit pas contenir de code d'affichage ou de gestion d'événements
 
 La **vue** est responsable de l'affichage des données du modèle à l'utilisateur. Elle ne modifie pas directement les données : elle se contente de les présenter.
 
-> **Info :**
-> On peut avoir plusieurs vues pour un même modèle (ex : une vue console, une vue graphique, une vue web...)
+::: info
+On peut avoir plusieurs vues pour un même modèle (ex : une vue console, une vue graphique, une vue web...)
+:::
 
 Exemple console en Java :
 
@@ -81,8 +84,9 @@ public class PersonneViewConsole {
 
 En JavaFX, la vue est souvent composée d'un fichier FXML (structure de l'interface) et d'un contrôleur de vue (classe Java qui gère l'affichage).
 
-> **À éviter :**
-> La vue ne doit pas contenir de logique métier (calculs, gestion des données, etc.)
+::: danger
+La vue ne doit pas contenir de logique métier (calculs, gestion des données, etc.)
+:::
 
 ---
 
@@ -90,8 +94,9 @@ En JavaFX, la vue est souvent composée d'un fichier FXML (structure de l'interf
 
 Le **contrôleur** fait le lien entre le modèle et la vue. Il gère les interactions de l'utilisateur, met à jour le modèle et demande à la vue de se mettre à jour.
 
-> **À retenir :**
-> Le contrôleur orchestre l'application : il reçoit les actions de l'utilisateur, modifie le modèle, puis demande à la vue de s'actualiser.
+::: warning
+Le contrôleur orchestre l'application : il reçoit les actions de l'utilisateur, modifie le modèle, puis demande à la vue de s'actualiser.
+:::
 
 Exemple JavaFX :
 
@@ -135,8 +140,9 @@ L'architecture MVC permet de séparer les différentes responsabilités de l'app
 - Favorise le travail en équipe (développeurs backend/frontend)
 - Améliore la testabilité du code
 
-> **À retenir :**
-> Plus le découpage est clair, plus il est facile de faire évoluer l'application sans tout casser !
+::: tip
+Plus le découpage est clair, plus il est facile de faire évoluer l'application sans tout casser !
+:::
 
 ---
 
@@ -147,5 +153,6 @@ L'architecture MVC permet de séparer les différentes responsabilités de l'app
 - Parfois plus de fichiers/classes à gérer
 - Peut entraîner une sur-ingénierie si mal appliqué
 
-> **Conseil :**
-> Pour les petits projets, il est possible de simplifier le schéma MVC, mais il reste utile de garder la séparation des rôles en tête.
+::: tip
+Pour les petits projets, il est possible de simplifier le schéma MVC, mais il reste utile de garder la séparation des rôles en tête.
+:::

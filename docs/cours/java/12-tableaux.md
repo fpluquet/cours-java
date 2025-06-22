@@ -2,7 +2,9 @@
 
 Les tableaux sont des structures de données fondamentales en Java. Ils permettent de stocker plusieurs valeurs du même type dans une seule variable, ce qui facilite la gestion de collections d’éléments (nombres, objets, etc.).
 
-> **À retenir** : Un tableau occupe un espace contigu en mémoire et chaque élément est accessible par son indice (la position dans le tableau, qui commence toujours à 0).
+::: tip À retenir
+Un tableau occupe un espace contigu en mémoire et chaque élément est accessible par son indice (la position dans le tableau, qui commence toujours à 0).
+:::
 
 ## Définition et création d’un tableau
 
@@ -14,7 +16,9 @@ int tabEntiers[] = new int[10]; // Syntaxe tolérée, mais moins recommandée
 int[] tabEntiers2 = new int[10]; // Syntaxe recommandée
 ```
 
-> **Info** : Préférez la syntaxe `int[] tab` pour plus de clarté, surtout quand vous déclarez plusieurs tableaux sur une même ligne.
+::: info
+Préférez la syntaxe `int[] tab` pour plus de clarté, surtout quand vous déclarez plusieurs tableaux sur une même ligne.
+:::
 
 ## Tableaux multidimensionnels
 
@@ -24,7 +28,9 @@ Java permet de créer des tableaux à plusieurs dimensions (par exemple, des mat
 int[][] tableauMulti = new int[10][5]; // 10 lignes, 5 colonnes
 ```
 
-> **Remarque** : Les tableaux multidimensionnels ne sont pas forcément « rectangulaires » en Java. Chaque sous-tableau peut avoir une taille différente.
+::: info
+Les tableaux multidimensionnels ne sont pas forcément « rectangulaires » en Java. Chaque sous-tableau peut avoir une taille différente.
+:::
 
 ## Parcourir un tableau
 
@@ -54,10 +60,14 @@ for(int nb : tableauUni){
 }
 ```
 
-> **Attention** : En Java, la propriété pour obtenir la taille d’un tableau est `length` (sans parenthèses), et non `Length` ou `length()`.
+::: warning Attention
+En Java, la propriété pour obtenir la taille d’un tableau est `length` (sans parenthèses), et non `Length` ou `length()`.
+:::
 
 ---
 
 Les tableaux sont très efficaces pour manipuler des collections fixes de données. Pour des collections dynamiques (qui changent de taille), il existe d’autres structures comme `ArrayList`.
 
-> **Pour aller plus loin** : Essayez d’écrire des fonctions qui prennent un tableau en paramètre, ou qui retournent un tableau, pour bien comprendre leur manipulation !
+::: tip Pour aller plus loin
+Essayez d’écrire des fonctions qui prennent un tableau en paramètre, ou qui retournent un tableau, pour bien comprendre leur manipulation !
+:::

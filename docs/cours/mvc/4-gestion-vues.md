@@ -2,8 +2,9 @@
 
 L'architecture MVC ne se limite pas à afficher des données : elle permet aussi de gérer plusieurs vues (lecture, édition, etc.) de façon propre et découplée. Cette capacité est essentielle pour faire évoluer une application sans tout réécrire.
 
-> **Info :**
-> Plus vos vues sont découplées, plus il est facile d'ajouter de nouvelles interfaces (console, web, mobile) ou de faire évoluer l'existant !
+::: info
+Plus vos vues sont découplées, plus il est facile d'ajouter de nouvelles interfaces (console, web, mobile) ou de faire évoluer l'existant !
+:::
 
 ## Exemple : affichage et édition d'un modèle
 
@@ -66,8 +67,9 @@ public class PersonneEditViewController implements Initializable {
 }
 ```
 
-> **À retenir :**
-> La vue ne gère que l'affichage et la collecte des données utilisateur. Toute modification du modèle passe par le listener.
+::: tip
+À retenir : La vue ne gère que l'affichage et la collecte des données utilisateur. Toute modification du modèle passe par le listener.
+:::
 
 ### 2. Contrôleur d'application (gestion des interactions)
 
@@ -106,8 +108,9 @@ public class PersonneApplication extends Application {
 }
 ```
 
-> **Info :**
-> Ce découplage permet de réutiliser la vue dans d'autres contextes, ou de la tester indépendamment du reste de l'application.
+::: info
+Ce découplage permet de réutiliser la vue dans d'autres contextes, ou de la tester indépendamment du reste de l'application.
+:::
 
 ## Pourquoi ce découplage ?
 
@@ -115,8 +118,9 @@ Si la vue dépendait directement du contrôleur d'application, elle ne pourrait 
 
 Ce principe est fondamental pour la maintenabilité et l'évolutivité des applications modernes.
 
-> **À retenir :**
-> Le découplage est la clé pour faire évoluer une application sans tout casser.
+::: tip
+Le découplage est la clé pour faire évoluer une application sans tout casser.
+:::
 
 ---
 

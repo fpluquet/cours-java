@@ -2,7 +2,9 @@
 
 Les tableaux en Java sont très utiles, mais ils ont une limite : leur taille est fixe. Si vous voulez ajouter ou retirer des éléments dynamiquement, il vaut mieux utiliser une structure plus souple : l’`ArrayList`.
 
-> **À retenir** : Une `ArrayList` est une collection dynamique qui peut grandir ou rétrécir à volonté, contrairement aux tableaux classiques.
+::: tip À retenir
+Une `ArrayList` est une collection dynamique qui peut grandir ou rétrécir à volonté, contrairement aux tableaux classiques.
+:::
 
 ## Création d'une `ArrayList`
 
@@ -18,7 +20,9 @@ On peut ensuite créer une liste typée (recommandé) :
 ArrayList<Integer> list = new ArrayList<>(); // Liste d'entiers
 ```
 
-> **Info** : Toujours préciser le type entre chevrons (`<Integer>`, `<String>`, etc.) pour éviter les erreurs et profiter du typage fort de Java.
+::: info
+Toujours préciser le type entre chevrons (`<Integer>`, `<String>`, etc.) pour éviter les erreurs et profiter du typage fort de Java.
+:::
 
 Il est aussi possible de créer une liste non typée (déconseillé) :
 
@@ -43,7 +47,9 @@ list.add(10);
 list.remove(0); // Supprime l'élément à l'index 0
 ```
 
-> **Attention** : Les indices commencent à 0, comme pour les tableaux.
+::: warning Attention
+Les indices commencent à 0, comme pour les tableaux.
+:::
 
 ## Parcourir une liste
 
@@ -79,10 +85,14 @@ for(int i = 0; i < listeEntiers.size(); i++) {
 // Affiche aussi "1" puis "2"
 ```
 
-> **Attention** : Pour connaître la taille d’une `ArrayList`, on utilise la méthode `size()` (et non `length`).
+::: warning Attention
+Pour connaître la taille d’une `ArrayList`, on utilise la méthode `size()` (et non `length`).
+:::
 
 ---
 
 Les `ArrayList`s sont idéales pour manipuler des collections dont la taille varie au cours de l’exécution. Pour des besoins plus avancés (file, pile, ensemble sans doublons…), explorez aussi les autres collections de Java (`LinkedList`, `HashSet`, etc.).
 
-> **Pour aller plus loin** : Essayez d’utiliser des `ArrayList` avec vos propres objets, ou de combiner plusieurs méthodes (`add`, `remove`, `contains`, etc.) pour bien comprendre leur fonctionnement !
+::: tip Pour aller plus loin
+Essayez d’utiliser des `ArrayList` avec vos propres objets, ou de combiner plusieurs méthodes (`add`, `remove`, `contains`, etc.) pour bien comprendre leur fonctionnement !
+:::

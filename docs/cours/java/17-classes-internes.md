@@ -2,13 +2,17 @@
 
 Les classes internes sont un mécanisme de Java permettant de définir une classe à l’intérieur d’une autre. Elles sont très utiles pour structurer le code, encapsuler des comportements spécifiques et renforcer l’organisation et la sécurité des données.
 
-> **À retenir :** Une classe interne est une classe déclarée à l’intérieur d’une autre classe. Elle peut accéder directement aux membres (même privés) de la classe englobante.
+::: tip À retenir
+Une classe interne est une classe déclarée à l’intérieur d’une autre classe. Elle peut accéder directement aux membres (même privés) de la classe englobante.
+:::
 
 ## Vous avez dit classes internes ?!
 
 En Java, il est possible de définir une classe à l’intérieur d’une autre classe. On parle alors de « classe interne ». Cette classe interne est liée à l’instance de la classe englobante, ce qui lui permet d’accéder à tous ses attributs et méthodes, même privés.
 
-> **Info :** Les classes internes sont souvent utilisées pour modéliser une relation « fait partie de » (ex : une classe `Adresse` interne à une classe `Personne`).
+::: info
+Les classes internes sont souvent utilisées pour modéliser une relation « fait partie de » (ex : une classe `Adresse` interne à une classe `Personne`).
+:::
 
 ## À quoi ça sert ?!
 
@@ -36,9 +40,10 @@ public class Externe {
 
 Dans cet exemple, la classe `Interne` peut accéder à l’attribut privé `x` de la classe `Externe`.
 
-> **Pédagogie :**
-> - Pour instancier une classe interne, il faut d’abord avoir une instance de la classe englobante.
-> - Les classes internes peuvent être privées, publiques, protégées ou package-private.
+::: tip Important
+- Pour instancier une classe interne, il faut d’abord avoir une instance de la classe englobante.
+- Les classes internes peuvent être privées, publiques, protégées ou package-private.
+:::
 
 ## Exemple concret : Personne et Adresse
 
@@ -90,16 +95,19 @@ public class Main {
 }
 ```
 
-> **À retenir :**
-> - La classe interne `Adresse` peut accéder aux méthodes et attributs de `Personne`.
-> - On ne peut pas utiliser `Adresse` sans une instance de `Personne`.
-> - Cela permet de bien encapsuler l’information et d’éviter la dispersion de classes inutiles dans le projet.
+::: tip À retenir
+- La classe interne `Adresse` peut accéder aux méthodes et attributs de `Personne`.
+- On ne peut pas utiliser `Adresse` sans une instance de `Personne`.
+- Cela permet de bien encapsuler l’information et d’éviter la dispersion de classes inutiles dans le projet.
+:::
 
 ## Les classes internes statiques
 
 En plus des classes internes « classiques » (liées à une instance), Java permet de définir des classes internes statiques. On les déclare avec le mot-clé `static` :
 
-> **Définition :** Une classe interne statique est une classe imbriquée qui n’est pas liée à une instance de la classe englobante. Elle fonctionne comme une classe « normale », mais reste rangée à l’intérieur d’une autre classe pour des raisons d’organisation ou de logique métier.
+::: info Définition
+Une classe interne statique est une classe imbriquée qui n’est pas liée à une instance de la classe englobante. Elle fonctionne comme une classe « normale », mais reste rangée à l’intérieur d’une autre classe pour des raisons d’organisation ou de logique métier.
+:::
 
 ### Différences entre classe interne statique et non statique
 
@@ -110,7 +118,9 @@ En plus des classes internes « classiques » (liées à une instance), Java per
 | S’instancie via une instance        | S’instancie sans instance              |
 | Syntaxe : `Externe.Interne` via une instance | Syntaxe : `Externe.InterneStatique` directement |
 
-> **Info :** Utilisez une classe interne statique si votre classe interne n’a pas besoin d’accéder à l’instance de la classe englobante. Cela permet d’éviter les références implicites inutiles et de clarifier l’intention du code.
+::: info
+Utilisez une classe interne statique si votre classe interne n’a pas besoin d’accéder à l’instance de la classe englobante. Cela permet d’éviter les références implicites inutiles et de clarifier l’intention du code.
+:::
 
 ### Exemple réel : classe interne statique pour une structure de données
 
@@ -156,9 +166,10 @@ public class Main {
 }
 ```
 
-> **À retenir :**
-> - La classe interne statique `Pair` est utilisée uniquement par `Dictionnaire` et n’a pas besoin d’accéder à l’instance de `Dictionnaire`.
-> - Cela permet de bien organiser le code et d’éviter de polluer l’espace de noms global avec des classes utilitaires.
+::: tip À retenir
+- La classe interne statique `Pair` est utilisée uniquement par `Dictionnaire` et n’a pas besoin d’accéder à l’instance de `Dictionnaire`.
+- Cela permet de bien organiser le code et d’éviter de polluer l’espace de noms global avec des classes utilitaires.
+:::
 
 ---
 
@@ -168,7 +179,9 @@ public class Main {
 - Utilisez la version statique si la classe interne n’a pas besoin d’accéder à l’instance de la classe principale.
 - Évitez de multiplier les niveaux d’imbrication, cela peut nuire à la lisibilité.
 
-> **À tester :** Essayez de créer une classe interne privée, protégée ou package-private, et observez l’impact sur la visibilité depuis l’extérieur.
+::: tip À tester
+Essayez de créer une classe interne privée, protégée ou package-private, et observez l’impact sur la visibilité depuis l’extérieur.
+:::
 
 ---
 

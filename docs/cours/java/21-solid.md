@@ -2,7 +2,9 @@
 
 Les principes **SOLID** sont cinq règles fondamentales de la programmation orientée objet. Ils servent de guide pour concevoir des logiciels robustes, évolutifs et faciles à maintenir. Bien appliqués, ils rendent le code plus modulaire, flexible, testable et compréhensible.
 
-> **Info :** Les principes SOLID ne sont pas réservés aux « experts » : ils s’appliquent à tous les niveaux, même dans de petits projets. Les comprendre, c’est progresser vers une programmation professionnelle.
+::: info
+Les principes SOLID ne sont pas réservés aux « experts » : ils s’appliquent à tous les niveaux, même dans de petits projets. Les comprendre, c’est progresser vers une programmation professionnelle.
+:::
 
 ---
 
@@ -14,8 +16,9 @@ Chaque classe ou module doit avoir une seule responsabilité, c’est-à-dire un
 **Explication :**
 Une classe qui fait trop de choses devient difficile à maintenir. Si une modification concerne plusieurs aspects, on risque d’introduire des bugs ailleurs.
 
-> **Exemple pédagogique :**
-> - Une classe `Facture` qui gère à la fois le calcul du montant et l’impression du PDF viole ce principe. Il vaut mieux séparer ces responsabilités.
+::: tip Exemple pédagogique
+- Une classe `Facture` qui gère à la fois le calcul du montant et l’impression du PDF viole ce principe. Il vaut mieux séparer ces responsabilités.
+:::
 
 ---
 
@@ -27,7 +30,9 @@ Les entités logicielles (classes, modules, fonctions) doivent être **ouvertes 
 **Explication :**
 On doit pouvoir ajouter de nouveaux comportements sans modifier le code existant, par exemple en utilisant l’héritage ou les interfaces.
 
-> **Info :** Privilégiez l’ajout de nouvelles classes ou méthodes plutôt que la modification de celles déjà en place.
+::: info
+Privilégiez l’ajout de nouvelles classes ou méthodes plutôt que la modification de celles déjà en place.
+:::
 
 ---
 
@@ -52,7 +57,9 @@ class Autruche extends Oiseau {
     }
 }
 ```
-> **À éviter :** Ici, `Autruche` ne respecte pas le contrat de `Oiseau` : toutes les méthodes de la classe parente ne sont pas valides pour la sous-classe.
+::: warning À éviter
+Ici, `Autruche` ne respecte pas le contrat de `Oiseau` : toutes les méthodes de la classe parente ne sont pas valides pour la sous-classe.
+:::
 
 ---
 
@@ -64,7 +71,9 @@ Il vaut mieux plusieurs petites interfaces spécifiques qu’une grosse interfac
 **Explication :**
 Une classe ne devrait jamais être obligée d’implémenter des méthodes dont elle n’a pas besoin. Cela rend le code plus clair et plus facile à maintenir.
 
-> **Info :** Découpez vos interfaces pour qu’elles soient cohérentes et ciblées.
+::: info
+Découpez vos interfaces pour qu’elles soient cohérentes et ciblées.
+:::
 
 ---
 
@@ -76,7 +85,9 @@ Dépendre des abstractions (interfaces), pas des implémentations concrètes.
 **Explication :**
 Au lieu de créer directement les objets dont une classe a besoin, on les lui fournit (injection de dépendance). Cela rend le code plus flexible et testable.
 
-> **Pour aller plus loin :** Voir le chapitre sur les interfaces pour un exemple détaillé d’inversion de dépendance.
+::: tip Pour aller plus loin
+Voir le chapitre sur les interfaces pour un exemple détaillé d’inversion de dépendance.
+:::
 
 ---
 
@@ -87,8 +98,9 @@ Au lieu de créer directement les objets dont une classe a besoin, on les lui fo
 - Réduit les effets de bord lors des modifications
 - Rend le code plus compréhensible pour les autres développeurs
 
-> **Résumé pédagogique :**
-> Appliquer SOLID, c’est écrire du code plus propre, plus modulaire et plus durable. Essayez d’identifier ces principes dans vos projets et de les mettre en pratique progressivement.
+::: tip Résumé pédagogique
+Appliquer SOLID, c’est écrire du code plus propre, plus modulaire et plus durable. Essayez d’identifier ces principes dans vos projets et de les mettre en pratique progressivement.
+:::
 
 ---
 

@@ -2,13 +2,17 @@
 
 En Java, la gestion de la mémoire est automatisée grâce au **garbage collector**. Cela signifie que, contrairement à certains langages comme le C, vous n’avez pas à libérer manuellement la mémoire occupée par les objets que vous n’utilisez plus. Le garbage collector s’en charge pour vous, ce qui simplifie grandement le développement et limite les risques de fuites de mémoire.
 
-> **À retenir** : Le garbage collector détruit automatiquement les objets qui ne sont plus accessibles dans votre programme. Vous n’avez donc pas à vous soucier de la libération de la mémoire !
+::: tip À retenir
+Le garbage collector détruit automatiquement les objets qui ne sont plus accessibles dans votre programme. Vous n’avez donc pas à vous soucier de la libération de la mémoire !
+:::
 
 ## GarbaQuoi ?
 
 Tout comme en C#, Java inclut un garbage collector. Son rôle est de surveiller la mémoire et de supprimer les objets qui ne sont plus référencés nulle part dans le code. Cela permet d’éviter que la mémoire ne soit saturée par des objets inutiles.
 
-> **Info** : Un objet devient « candidat à la suppression » dès qu’il n’est plus accessible par aucune variable ou référence active.
+::: info
+Un objet devient « candidat à la suppression » dès qu’il n’est plus accessible par aucune variable ou référence active.
+:::
 
 Il est possible de demander explicitement au garbage collector de faire une passe, mais cela reste très rare et n’est pas garanti :
 
@@ -17,7 +21,9 @@ System.gc(); // Demande au garbage collector de s’exécuter
 // Très peu utilisé. Il est rare d'appeler le GC soi-même
 ```
 
-> **Remarque** : L’appel à `System.gc()` n’est qu’une demande. Le garbage collector peut choisir de l’ignorer.
+::: info
+L’appel à `System.gc()` n’est qu’une demande. Le garbage collector peut choisir de l’ignorer.
+:::
 
 ## Méthode `finalize()`
 
@@ -37,7 +43,9 @@ public class Personne {
 }
 ```
 
-> **Attention** : L’utilisation de `finalize()` est déconseillée. Son exécution n’est pas garantie (la méthode peut ne jamais être appelée), et elle est désormais obsolète dans les versions récentes de Java. Préférez d’autres mécanismes pour libérer des ressources (ex : blocs `try-with-resources`).
+::: warning Attention
+L’utilisation de `finalize()` est déconseillée. Son exécution n’est pas garantie (la méthode peut ne jamais être appelée), et elle est désormais obsolète dans les versions récentes de Java. Préférez d’autres mécanismes pour libérer des ressources (ex : blocs `try-with-resources`).
+:::
 
 ---
 

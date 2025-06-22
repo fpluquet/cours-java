@@ -2,13 +2,17 @@
 
 Les classes anonymes sont un outil puissant et pratique de Java, souvent utilisé pour écrire du code concis, notamment dans les interfaces graphiques, les threads ou les callbacks. Elles permettent de créer une classe « à la volée », sans avoir à lui donner un nom explicite ni à créer un fichier séparé.
 
-> **À retenir :** Une classe anonyme est une classe sans nom, déclarée et instanciée en une seule expression. Elle est généralement utilisée pour redéfinir rapidement le comportement d’une interface ou d’une classe abstraite.
+::: tip À retenir
+Une classe anonyme est une classe sans nom, déclarée et instanciée en une seule expression. Elle est généralement utilisée pour redéfinir rapidement le comportement d’une interface ou d’une classe abstraite.
+:::
 
 ## Qu'est-ce qu'une classe anonyme ?
 
 Une classe anonyme est une classe interne qui n’a pas de nom. Elle est déclarée et instanciée en même temps, généralement dans le corps d’une méthode. On l’utilise souvent pour fournir une implémentation immédiate d’une interface ou d’une classe abstraite, là où on n’a besoin de cette implémentation qu’une seule fois.
 
-> **Info :** Les classes anonymes sont très utilisées avant l’arrivée des lambdas (Java 8), mais restent utiles pour les cas où il faut redéfinir plusieurs méthodes ou accéder à l’état local.
+::: info
+Les classes anonymes sont très utilisées avant l’arrivée des lambdas (Java 8), mais restent utiles pour les cas où il faut redéfinir plusieurs méthodes ou accéder à l’état local.
+:::
 
 ## Définition d'une classe anonyme
 
@@ -25,9 +29,10 @@ r.run();
 
 Dans cet exemple, on crée une implémentation de l’interface `Runnable` sans créer de classe nommée. On instancie directement un objet qui possède la méthode `run()`.
 
-> **Pédagogie :**
-> - On utilise souvent les classes anonymes pour passer du code en paramètre (ex : gestionnaires d’événements, threads, etc.).
-> - Elles permettent de garder le code court et localisé, mais peuvent devenir difficiles à lire si elles sont trop longues.
+::: tip Important
+- On utilise souvent les classes anonymes pour passer du code en paramètre (ex : gestionnaires d’événements, threads, etc.).
+- Elles permettent de garder le code court et localisé, mais peuvent devenir difficiles à lire si elles sont trop longues.
+:::
 
 ## Utilisation
 
@@ -42,7 +47,9 @@ Thread t = new Thread(new Runnable() {
 t.start();
 ```
 
-> **À savoir :** Depuis Java 8, on peut souvent remplacer les classes anonymes par des expressions lambda, mais les classes anonymes restent nécessaires si on doit définir plusieurs méthodes ou stocker un état local.
+::: tip À savoir
+Depuis Java 8, on peut souvent remplacer les classes anonymes par des expressions lambda, mais les classes anonymes restent nécessaires si on doit définir plusieurs méthodes ou stocker un état local.
+:::
 
 ## Attention au mot-clé `this` dans les classes anonymes
 
@@ -75,11 +82,14 @@ public class Main {
 }
 ```
 
-> **À retenir :**
-> - `this.nom` fait référence à l’attribut de la classe anonyme.
-> - `Externe.this.nom` permet d’accéder à l’attribut de la classe englobante.
+::: tip À retenir
+- `this.nom` fait référence à l’attribut de la classe anonyme.
+- `Externe.this.nom` permet d’accéder à l’attribut de la classe englobante.
+:::
 
-> **Info :** Cette syntaxe (`NomDeLaClasse.this`) est très utile pour lever toute ambiguïté, notamment dans les callbacks ou les listeners où on veut accéder à l’objet principal.
+::: info
+Cette syntaxe (`NomDeLaClasse.this`) est très utile pour lever toute ambiguïté, notamment dans les callbacks ou les listeners où on veut accéder à l’objet principal.
+:::
 
 ---
 

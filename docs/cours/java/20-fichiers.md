@@ -2,7 +2,9 @@
 
 La gestion des fichiers est une compétence essentielle en Java. Ce chapitre présente les différentes manières de manipuler des fichiers (création, lecture, écriture, suppression), les classes à utiliser selon le contexte (texte, binaire, objets), les bonnes pratiques et un comparatif des approches classiques et modernes.
 
-> **À retenir :** Java propose plusieurs API pour manipuler les fichiers. Le choix dépend du type de données, des performances attendues et de la simplicité du code.
+::: tip À retenir
+Java propose plusieurs API pour manipuler les fichiers. Le choix dépend du type de données, des performances attendues et de la simplicité du code.
+:::
 
 ---
 
@@ -23,7 +25,9 @@ boolean isDir = file.isDirectory(); // Est-ce un dossier ?
 - Supprimer : `file.delete();`
 - Lister le contenu d’un dossier : `file.listFiles();`
 
-> **Info :** `File` ne lit/écrit pas le contenu, il gère la structure (présence, nom, chemin, etc.).
+::: info
+`File` ne lit/écrit pas le contenu, il gère la structure (présence, nom, chemin, etc.).
+:::
 
 ---
 
@@ -47,7 +51,9 @@ while ((c = fr.read()) != -1) {
 fr.close();
 ```
 
-> **Pédagogie :** Utilisez toujours `close()` pour libérer les ressources, ou mieux, le try-with-resources (voir plus bas).
+::: tip Important
+Utilisez toujours `close()` pour libérer les ressources, ou mieux, le try-with-resources (voir plus bas).
+:::
 
 ---
 
@@ -69,7 +75,9 @@ while ((b = fis.read()) != -1) {
 fis.close();
 ```
 
-> **Info :** Utilisez les flux binaires pour les images, sons, fichiers compressés, etc.
+::: info
+Utilisez les flux binaires pour les images, sons, fichiers compressés, etc.
+:::
 
 ---
 
@@ -113,7 +121,9 @@ En Java, les flux (InputStream, OutputStream, Reader, Writer) sont souvent utili
 
 On peut les « empiler » pour combiner leurs fonctionnalités, selon le **design pattern décorateur**.
 
-> **Concept avancé :** Le décorateur permet d’ajouter dynamiquement des fonctionnalités à un flux sans modifier sa structure de base. Chaque flux (InputStream, OutputStream, Reader, Writer) peut être « décoré » par d’autres pour ajouter des capacités (bufferisation, chiffrement, compression, etc.).
+::: info
+Le décorateur permet d’ajouter dynamiquement des fonctionnalités à un flux sans modifier sa structure de base. Chaque flux (InputStream, OutputStream, Reader, Writer) peut être « décoré » par d’autres pour ajouter des capacités (bufferisation, chiffrement, compression, etc.).
+:::
 
 ### Illustration UML du pattern décorateur appliqué aux flux Java
 
@@ -147,7 +157,9 @@ classDiagram
 - `FilterInputStream` est une classe abstraite qui permet de décorer un autre `InputStream`.
 - `BufferedInputStream` ajoute un tampon pour accélérer la lecture, sans changer l’interface.
 
-> **Info :** On peut empiler plusieurs décorateurs (buffer, chiffrement, compression, etc.) pour composer des comportements complexes.
+::: info
+On peut empiler plusieurs décorateurs (buffer, chiffrement, compression, etc.) pour composer des comportements complexes.
+:::
 
 ### Exemple avancé : ajout d’un décorateur personnalisé
 
@@ -175,7 +187,9 @@ try (CountingInputStream cis = new CountingInputStream(new BufferedInputStream(n
 }
 ```
 
-> **Pédagogie :** Le pattern décorateur permet d’ajouter des fonctionnalités sans modifier les classes existantes, en respectant le principe « open/closed » (ouvert à l’extension, fermé à la modification).
+::: tip Important
+Le pattern décorateur permet d’ajouter des fonctionnalités sans modifier les classes existantes, en respectant le principe « open/closed » (ouvert à l’extension, fermé à la modification).
+:::
 
 ---
 
@@ -202,9 +216,13 @@ try (
 // Toutes les ressources sont fermées automatiquement ici
 ```
 
-> **À savoir :** Le try-with-resources fonctionne avec toute classe qui implémente l’interface `AutoCloseable` (presque tous les flux Java, mais aussi des connexions réseau, bases de données, etc.).
+::: info
+Le try-with-resources fonctionne avec toute classe qui implémente l’interface `AutoCloseable` (presque tous les flux Java, mais aussi des connexions réseau, bases de données, etc.).
+:::
 
-> **Pédagogie :** Cela évite les fuites de ressources, les oublis de fermeture, et rend le code plus sûr et plus lisible.
+::: tip Important
+Cela évite les fuites de ressources, les oublis de fermeture, et rend le code plus sûr et plus lisible.
+:::
 
 ---
 
@@ -222,7 +240,9 @@ Personne p = (Personne) ois.readObject();
 ois.close();
 ```
 
-> **À savoir :** La classe à sérialiser doit implémenter `Serializable`.
+::: info
+La classe à sérialiser doit implémenter `Serializable`.
+:::
 
 ---
 
@@ -244,7 +264,9 @@ try (Stream<String> stream = Files.lines(Paths.get("fichier.txt"))) {
 }
 ```
 
-> **Info :** L’API NIO permet aussi de copier, déplacer, supprimer, surveiller des fichiers, etc.
+::: info
+L’API NIO permet aussi de copier, déplacer, supprimer, surveiller des fichiers, etc.
+:::
 
 ---
 
@@ -259,7 +281,9 @@ try (Stream<String> stream = Files.lines(Paths.get("fichier.txt"))) {
 | Lecture binaire        | Non                   | Non                    | Oui                     |
 | API moderne            | Non                   | Non                    | Oui                     |
 
-> **Conseil :** Choisissez l’API adaptée à votre besoin : NIO pour la modernité et la polyvalence, Scanner pour l’analyse de texte, BufferedReader pour la performance sur de gros fichiers texte.
+::: tip Conseil
+Choisissez l’API adaptée à votre besoin : NIO pour la modernité et la polyvalence, Scanner pour l’analyse de texte, BufferedReader pour la performance sur de gros fichiers texte.
+:::
 
 ---
 
@@ -269,3 +293,5 @@ try (Stream<String> stream = Files.lines(Paths.get("fichier.txt"))) {
 - Gérer les exceptions (fichiers manquants, droits, etc.)
 - Privilégier l’API NIO pour les nouveaux projets
 - Utiliser la sérialisation pour sauvegarder des objets
+
+---

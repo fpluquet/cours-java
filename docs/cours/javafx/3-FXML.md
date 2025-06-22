@@ -49,12 +49,12 @@ Le `getResource("monfichier.fxml")` doit pointer vers le bon chemin du fichier F
 - Le fichier FXML est bien dans le dossier de ressources de votre projet (souvent `src/main/resources` ou à la racine du classpath).
 - Le nom du fichier et son extension sont corrects.
 
-> **Astuce :**
-> Si le fichier FXML est dans un sous-dossier, indiquez le chemin relatif, par exemple : `"/fxml/monfichier.fxml"`.
+::: tip
+Si le fichier FXML est dans un sous-dossier, indiquez le chemin relatif, par exemple : `"/fxml/monfichier.fxml"`.
+:::
 
 ## Utiliser SceneBuilder
 SceneBuilder est un éditeur graphique qui permet de créer des interfaces FXML par glisser-déposer. Il génère le fichier FXML automatiquement, que l’on peut ensuite charger dans son application JavaFX.
-
 
 ## Résumé
 - FXML = structure de l’interface en XML
@@ -62,5 +62,6 @@ SceneBuilder est un éditeur graphique qui permet de créer des interfaces FXML 
 - FXMLLoader = fait le lien entre les deux
 - SceneBuilder = outil visuel pour créer du FXML
 
-> **Astuce :**
-> Utiliser FXML rend vos interfaces plus modulaires, maintenables et collaboratives !
+::: tip
+Utiliser FXML rend vos interfaces plus modulaires, maintenables et collaboratives !
+:::

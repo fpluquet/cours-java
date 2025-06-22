@@ -2,8 +2,9 @@
 
 Dans les applications qui manipulent des données persistantes (fichiers, bases de données, API...), on ajoute souvent une couche de **repositories** (ou dépôts) à l'architecture MVC. Cette couche permet de mieux organiser le code et de séparer les responsabilités.
 
-> **Info :**
-> Un repository est comme un « magasin » où l'on va chercher ou stocker les objets du modèle, sans se soucier de la façon dont ils sont réellement stockés.
+::: info
+Un repository est comme un « magasin » où l'on va chercher ou stocker les objets du modèle, sans se soucier de la façon dont ils sont réellement stockés.
+:::
 
 ## Qu'est-ce qu'un repository ?
 Un repository est une classe qui gère l'accès aux données : lecture, écriture, recherche, suppression, etc. Il fait le lien entre le modèle et la source de données (base de données, fichier, API...).
@@ -18,8 +19,9 @@ Un repository est une classe qui gère l'accès aux données : lecture, écrit
 - **Faciliter** le changement de technologie de stockage
 - **Favoriser** les tests (on peut simuler un repository en mémoire)
 
-> **À retenir :**
-> Un bon repository ne fait que de la persistance : il ne contient pas de logique métier.
+::: tip
+À retenir : Un bon repository ne fait que de la persistance : il ne contient pas de logique métier.
+:::
 
 ## Exemple
 Voici une interface de repository pour le modèle `Personne` :
@@ -86,8 +88,9 @@ public class Main {
 }
 ```
 
-> **Info :**
-> Cette implémentation en mémoire est idéale pour les tests unitaires ou les prototypes. Pour une vraie application, il suffit d'implémenter l'interface avec une classe qui utilise une base de données ou des fichiers.
+::: info
+Cette implémentation en mémoire est idéale pour les tests unitaires ou les prototypes. Pour une vraie application, il suffit d'implémenter l'interface avec une classe qui utilise une base de données ou des fichiers.
+:::
 
 ## Exemple concret complet : implémentation avec une base de données (JDBC)
 
@@ -213,16 +216,18 @@ public class Personne {
 }
 ```
 
-> **Info :**
-> Cette version fonctionne avec SQLite (aucune installation serveur nécessaire, juste le driver JDBC). Pour tester, ajoute la dépendance SQLite JDBC à ton projet.
+::: info
+Cette version fonctionne avec SQLite (aucune installation serveur nécessaire, juste le driver JDBC). Pour tester, ajoute la dépendance SQLite JDBC à ton projet.
+:::
 
 ## Où placer les repositories dans MVC ?
 - Les **services** ou **contrôleurs** font appel aux repositories pour accéder aux données
 - Les **modèles** ne connaissent pas la persistance (ils ne savent pas s'ils viennent d'une base, d'un fichier, etc.)
 - Les **vues** n'appellent jamais directement les repositories
 
-> **Info :**
-> Utiliser des interfaces pour les repositories permet de changer facilement de technologie (ex : passer d'une base de données à un fichier) sans modifier le reste de l'application.
+::: info
+Utiliser des interfaces pour les repositories permet de changer facilement de technologie (ex : passer d'une base de données à un fichier) sans modifier le reste de l'application.
+:::
 
 ---
 

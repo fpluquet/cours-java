@@ -2,8 +2,9 @@
 
 Les layouts (ou « gestionnaires de disposition ») sont des outils fondamentaux pour organiser les composants graphiques dans une fenêtre JavaFX. Ils permettent de structurer l’interface de façon claire, flexible et responsive, sans avoir à calculer manuellement la position de chaque élément.
 
-> **Info :**
-> Un bon choix de layout rend votre interface plus lisible, plus facile à maintenir et plus agréable à utiliser.
+::: info
+Un bon choix de layout rend votre interface plus lisible, plus facile à maintenir et plus agréable à utiliser.
+:::
 
 ## AnchorPane
 
@@ -45,8 +46,9 @@ for(int i = 0; i < 10; i++) {
 }
 ```
 
-> **Info :**
-> L’AnchorPane donne une grande liberté, mais attention à la lisibilité et à l’adaptabilité de l’interface lors du redimensionnement de la fenêtre.
+::: info
+L’AnchorPane donne une grande liberté, mais attention à la lisibilité et à l’adaptabilité de l’interface lors du redimensionnement de la fenêtre.
+:::
 
 ## FlowPane
 
@@ -95,8 +97,9 @@ Ce code crée un `GridPane` et y place des labels et des champs de texte dans un
 - **HBox** (Horizontal Box) : aligne les enfants horizontalement, de gauche à droite.
 - **VBox** (Vertical Box) : aligne les enfants verticalement, de haut en bas.
 
-> **Info :**
-> HBox = « Horizontal Box », VBox = « Vertical Box ». Retenez la logique !
+::: info
+HBox = « Horizontal Box », VBox = « Vertical Box ». Retenez la logique !
+:::
 
 - Ces layouts sont parfaits pour organiser des barres d’outils, des menus, ou des listes d’éléments.
 
@@ -213,15 +216,17 @@ border.setBottom(new Label("Bas"));
 **Explication :**
 Un `BorderPane` est créé et chaque zone (haut, gauche, centre, droite, bas) reçoit un label. Le centre occupe tout l'espace restant.
 
-> **À retenir :**
-> Bien choisir son layout, c’est la clé d’une interface claire, adaptable et agréable à utiliser !
+::: tip
+Bien choisir son layout, c’est la clé d’une interface claire, adaptable et agréable à utiliser !
+:::
 
 ## Composer des interfaces avec plusieurs layouts
 
 Dans une application JavaFX, il est très courant de combiner plusieurs layouts pour obtenir une interface riche, structurée et ergonomique. Chaque layout a ses points forts : en les imbriquant intelligemment, on peut répondre à tous les besoins d’organisation.
 
-> **Info :**
-> Pensez votre interface comme un puzzle : chaque zone peut utiliser le layout le plus adapté à son contenu.
+::: info
+Pensez votre interface comme un puzzle : chaque zone peut utiliser le layout le plus adapté à son contenu.
+:::
 
 ### Exemple de composition
 
@@ -279,5 +284,6 @@ Ce diagramme montre comment chaque zone du `BorderPane` peut contenir un layout 
 - **N’hésitez pas à imbriquer** plusieurs layouts pour obtenir la structure désirée.
 - **Testez le redimensionnement** de la fenêtre pour vérifier que tout reste lisible et harmonieux.
 
-> **À retenir :**
-> La puissance de JavaFX vient de la possibilité de combiner librement tous les layouts : c’est la clé pour des interfaces professionnelles et agréables à utiliser.
+::: tip
+La puissance de JavaFX vient de la possibilité de combiner librement tous les layouts : c’est la clé pour des interfaces professionnelles et agréables à utiliser.
+:::

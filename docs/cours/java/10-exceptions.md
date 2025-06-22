@@ -2,7 +2,9 @@
 
 La gestion des erreurs est un aspect fondamental de la programmation. En Java, ce sont les exceptions qui permettent de signaler et de traiter les situations anormales, sans faire planter tout le programme.
 
-> **À retenir** : Une exception est un événement qui interrompt le déroulement normal du programme. Elle permet de réagir proprement à une erreur, au lieu de laisser le programme s’arrêter brutalement.
+::: info À retenir
+Une exception est un événement qui interrompt le déroulement normal du programme. Elle permet de réagir proprement à une erreur, au lieu de laisser le programme s’arrêter brutalement.
+:::
 
 ## Qu'est-ce qu'une exception ?
 
@@ -14,7 +16,9 @@ Pour éviter cela, il faut gérer les exceptions à l’aide d’un bloc `try-ca
 
 Le bloc `try` permet d’« essayer » un morceau de code susceptible de générer une exception. Si une exception survient, le contrôle passe dans le bloc `catch` correspondant, où vous pouvez réagir à l’erreur.
 
-> **Info** : Vous pouvez chaîner plusieurs blocs `catch` pour gérer différents types d’exceptions, ou utiliser un seul bloc avec le type `Exception` pour tout attraper.
+::: info
+Vous pouvez chaîner plusieurs blocs `catch` pour gérer différents types d’exceptions, ou utiliser un seul bloc avec le type `Exception` pour tout attraper.
+:::
 
 Exemple :
 
@@ -32,7 +36,9 @@ catch(InputMismatchException ex){
 scanner.close();
 ```
 
-> **Attention** : Le nom de la méthode est `nextInt()` (avec un n minuscule), pas `NextInt()`.
+::: warning Attention
+Le nom de la méthode est `nextInt()` (avec un n minuscule), pas `NextInt()`.
+:::
 
 ## Finally
 
@@ -138,7 +144,9 @@ Throwable
         └── ...
 ```
 
-> **À savoir** : Les erreurs (`Error`) sont des problèmes graves (ex : mémoire insuffisante) que l’on ne cherche généralement pas à gérer.
+::: info À savoir
+Les erreurs (`Error`) sont des problèmes graves (ex : mémoire insuffisante) que l’on ne cherche généralement pas à gérer.
+:::
 
 ### Exemple pratique complet
 
@@ -185,19 +193,25 @@ public class ExceptionComparison {
 
 ### Quand utiliser quoi ?
 
-> **Utilisez les exceptions vérifiées** quand :
-> - L’erreur est prévisible et externe à votre contrôle (fichier manquant, problème réseau, etc.)
-> - L’application peut potentiellement récupérer de l’erreur
-> - Vous voulez forcer les utilisateurs de votre méthode à gérer l’exception
+::: tip
+**Utilisez les exceptions vérifiées** quand :
+- L’erreur est prévisible et externe à votre contrôle (fichier manquant, problème réseau, etc.)
+- L’application peut potentiellement récupérer de l’erreur
+- Vous voulez forcer les utilisateurs de votre méthode à gérer l’exception
+:::
 
-> **Les RuntimeException sont appropriées** quand :
-> - L’erreur représente un bug de programmation (paramètre null inattendu, index invalide, etc.)
-> - L’erreur indique un état incohérent qui ne devrait jamais arriver si le code est correct
-> - L’erreur est généralement fatale et difficile à récupérer
+::: info
+**Les RuntimeException sont appropriées** quand :
+- L’erreur représente un bug de programmation (paramètre null inattendu, index invalide, etc.)
+- L’erreur indique un état incohérent qui ne devrait jamais arriver si le code est correct
+- L’erreur est généralement fatale et difficile à récupérer
+:::
 
 Cette distinction aide à créer du code plus robuste et expressif : les exceptions vérifiées documentent les cas d’erreur que les appelants doivent considérer, tandis que les RuntimeException signalent des bugs qui doivent être corrigés plutôt que gérés.
 
-> **Pour aller plus loin** : Essayez de provoquer différentes exceptions dans vos programmes, puis entraînez-vous à les gérer proprement avec des blocs try-catch adaptés !
+::: tip
+Pour aller plus loin : Essayez de provoquer différentes exceptions dans vos programmes, puis entraînez-vous à les gérer proprement avec des blocs try-catch adaptés !
+:::
 
 
 
@@ -230,7 +244,9 @@ public class PropagationExceptionDemo {
 }
 ```
 
-> **À retenir** : Une exception peut être capturée à n’importe quel niveau de la pile d’appels. On peut choisir de la traiter, de la relancer, ou de la transformer en une autre exception plus explicite.
+::: info À retenir
+Une exception peut être capturée à n’importe quel niveau de la pile d’appels. On peut choisir de la traiter, de la relancer, ou de la transformer en une autre exception plus explicite.
+:::
 
 ## Créer ses propres exceptions
 
@@ -252,7 +268,9 @@ public class InvalidUserInputException extends Exception {
 }
 ```
 
-> **Info** : L’argument `cause` permet de conserver la trace de l’exception d’origine. Cela facilite le débogage, car on peut remonter toute la chaîne d’exceptions jusqu’à la source du problème.
+::: info
+L’argument `cause` permet de conserver la trace de l’exception d’origine. Cela facilite le débogage, car on peut remonter toute la chaîne d’exceptions jusqu’à la source du problème.
+:::
 
 Vous pouvez ensuite utiliser votre exception personnalisée dans votre code :
 
@@ -270,7 +288,9 @@ public void processUserInput(String input) throws InvalidUserInputException {
 
 Dans cet exemple, si l’utilisateur saisit une valeur non entière, une `NumberFormatException` sera levée. On la capture et on relance une exception métier plus explicite (`InvalidUserInputException`), tout en conservant la cause d’origine grâce à l’argument `cause`.
 
-> **À retenir** : Créer ses propres exceptions permet de rendre le code plus lisible, de mieux documenter les erreurs possibles, et de faciliter le suivi des causes lors du débogage.
+::: info À retenir
+Créer ses propres exceptions permet de rendre le code plus lisible, de mieux documenter les erreurs possibles, et de faciliter le suivi des causes lors du débogage.
+:::
 
 ### Affichage de la trace complète avec `printStackTrace()`
 
@@ -309,7 +329,9 @@ Caused by: java.lang.NumberFormatException: For input string: "abc"
     ...
 ```
 
-> **À retenir** : Grâce à l’argument `cause` et à `printStackTrace()`, on peut remonter toute la chaîne des erreurs, ce qui facilite grandement le débogage.
+::: info À retenir
+Grâce à l’argument `cause` et à `printStackTrace()`, on peut remonter toute la chaîne des erreurs, ce qui facilite grandement le débogage.
+:::
 
 
 ## Exemple réel : gestion et propagation d’exceptions dans une application
@@ -376,5 +398,7 @@ public class ApplicationDemo {
 - Une erreur d’analyse (`IllegalArgumentException`) est capturée, puis transformée en `AnalysisException` (exception métier).
 - Une erreur d’accès au fichier (`IOException`) est capturée et transformée en `AnalysisException`.
 
-> **À retenir** : Dans une application réelle, il est courant de laisser certaines exceptions traverser plusieurs couches, d’en relancer d’autres, ou de les transformer pour donner plus de sens au contexte métier.
+::: info À retenir
+Dans une application réelle, il est courant de laisser certaines exceptions traverser plusieurs couches, d’en relancer d’autres, ou de les transformer pour donner plus de sens au contexte métier.
+:::
 

@@ -2,7 +2,9 @@
 
 En Java, les objets sont le cœur même du langage orienté objet. Ils représentent des entités concrètes ou abstraites, dotées de caractéristiques (attributs) et de comportements (méthodes). Comprendre la notion d’objet, c’est franchir une étape essentielle dans la programmation Java.
 
-> **À retenir** : Un objet est une instance d’une classe. Si la classe est le plan, l’objet est la maison construite à partir de ce plan.
+::: tip À retenir
+Un objet est une instance d’une classe. Si la classe est le plan, l’objet est la maison construite à partir de ce plan.
+:::
 
 ## Instanciation d'un objet
 
@@ -18,7 +20,9 @@ On peut également attribuer la valeur `null` à une variable de type objet, ce 
 Object objet1 = null;
 ```
 
-> **Info** : Une variable objet non initialisée a la valeur `null` par défaut. Il est donc important de vérifier qu’une variable n’est pas `null` avant de l’utiliser, pour éviter les erreurs d’exécution (NullPointerException).
+::: info
+Une variable objet non initialisée a la valeur `null` par défaut. Il est donc important de vérifier qu’une variable n’est pas `null` avant de l’utiliser, pour éviter les erreurs d’exécution (NullPointerException).
+:::
 
 ```java
 Object objet2;
@@ -31,7 +35,9 @@ if(objet2 == null){
 
 La méthode `toString()` est définie dans la classe `Object`. Comme toutes les classes héritent de `Object`, cette méthode peut être appelée sur n’importe quel objet. Par défaut, elle affiche le nom du package et de la classe, suivi d’un identifiant. On redéfinit souvent cette méthode pour obtenir une représentation plus lisible de nos objets.
 
-> **Bon à savoir** : Redéfinir `toString()` dans vos classes rend le débogage et l’affichage d’informations beaucoup plus pratiques !
+::: tip Bon à savoir
+Redéfinir `toString()` dans vos classes rend le débogage et l’affichage d’informations beaucoup plus pratiques !
+:::
 
 ## Le "static"
 
@@ -66,10 +72,14 @@ class Maths{
 }
 ```
 
-> **Important** : Dans une méthode statique, le mot-clé `this` ne peut pas être utilisé. En effet, il n’y a pas d’objet sur lequel faire référence, puisque la méthode est appelée sur la classe directement (`Maths.Addition(1,2)`).
+::: warning Important
+Dans une méthode statique, le mot-clé `this` ne peut pas être utilisé. En effet, il n’y a pas d’objet sur lequel faire référence, puisque la méthode est appelée sur la classe directement (`Maths.Addition(1,2)`).
+:::
 
 ---
 
 Ainsi, manipuler des objets et comprendre la différence entre membres statiques et non-statiques est fondamental pour écrire du code Java efficace et robuste.
 
-> **Pour aller plus loin** : Essayez de créer vos propres classes avec des attributs et des méthodes statiques, puis manipulez-les dans un programme pour bien saisir la différence avec les membres d’instance !
+::: tip Pour aller plus loin
+Essayez de créer vos propres classes avec des attributs et des méthodes statiques, puis manipulez-les dans un programme pour bien saisir la différence avec les membres d’instance !
+:::

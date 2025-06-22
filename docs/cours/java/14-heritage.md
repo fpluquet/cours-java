@@ -2,7 +2,9 @@
 
 L’héritage est l’un des concepts fondamentaux de la programmation orientée objet (POO), au même titre que l’encapsulation et le polymorphisme. Il permet de créer de nouvelles classes à partir de classes existantes, en réutilisant et en spécialisant leur comportement. Grâce à l’héritage, on peut factoriser le code commun à plusieurs classes et organiser les concepts de manière hiérarchique, ce qui favorise la lisibilité, la maintenance et l’évolution des programmes.
 
-> **Définition** : L’héritage consiste à définir une nouvelle classe (dite « classe dérivée » ou « classe enfant ») à partir d’une classe existante (dite « classe de base » ou « classe parente »). La classe enfant hérite des attributs et des méthodes de la classe parente, et peut en ajouter ou en modifier.
+::: info Définition
+L’héritage consiste à définir une nouvelle classe (dite « classe dérivée » ou « classe enfant ») à partir d’une classe existante (dite « classe de base » ou « classe parente »). La classe enfant hérite des attributs et des méthodes de la classe parente, et peut en ajouter ou en modifier.
+:::
 
 ## Pourquoi utiliser l’héritage ?
 
@@ -10,7 +12,9 @@ L’héritage est l’un des concepts fondamentaux de la programmation orientée
 - **Organisation logique** : Structurer les concepts selon des relations « est-un » (ex : un Chien est un Animal).
 - **Extensibilité** : Ajouter facilement de nouveaux comportements spécifiques sans toucher au code existant.
 
-> **Exemple d’analogie** : Dans la vie courante, on peut dire qu’un vélo, une voiture et un camion sont tous des véhicules. Ils partagent des caractéristiques communes (roues, moteur, capacité à se déplacer), mais chacun a aussi ses particularités. En POO, on modélisera cela par une classe `Vehicule` dont hériteront les classes `Velo`, `Voiture`, `Camion`.
+::: tip Exemple d’analogie
+Dans la vie courante, on peut dire qu’un vélo, une voiture et un camion sont tous des véhicules. Ils partagent des caractéristiques communes (roues, moteur, capacité à se déplacer), mais chacun a aussi ses particularités. En POO, on modélisera cela par une classe `Vehicule` dont hériteront les classes `Velo`, `Voiture`, `Camion`.
+:::
 
 ---
 
@@ -46,7 +50,9 @@ class Enfant extends Personne {
 
 Dans cet exemple, les classes `Adulte` et `Enfant` héritent de la classe `Personne`. Elles récupèrent automatiquement les attributs `nom` et `prenom`, ainsi que les méthodes publiques de `Personne`. Elles peuvent aussi ajouter leurs propres attributs ou redéfinir des méthodes si besoin.
 
-> **Info** : Le mot-clé `super` permet d’appeler le constructeur ou les méthodes de la classe parente. C’est utile pour initialiser les attributs hérités ou réutiliser du code parent.
+::: info
+Le mot-clé `super` permet d’appeler le constructeur ou les méthodes de la classe parente. C’est utile pour initialiser les attributs hérités ou réutiliser du code parent.
+:::
 
 ---
 
@@ -111,7 +117,9 @@ public class Program {
 
 Dans ce code, la méthode `getNom()` est redéfinie dans chaque sous-classe. Lorsqu’on appelle `getHelloStr()` sur une variable de type `Forme`, c’est la version la plus spécialisée de `getNom()` qui est utilisée, selon le type réel de l’objet (ici, `Cercle` ou `Rectangle`).
 
-> **À savoir** : Le mot-clé `@Override` indique que la méthode redéfinit une méthode de la classe parente. Cela permet d’éviter les erreurs de signature et améliore la lisibilité du code.
+::: tip À savoir
+Le mot-clé `@Override` indique que la méthode redéfinit une méthode de la classe parente. Cela permet d’éviter les erreurs de signature et améliore la lisibilité du code.
+:::
 
 ---
 
@@ -122,7 +130,9 @@ Une classe abstraite est une classe que l’on ne peut pas instancier directemen
 - Une classe abstraite peut contenir des attributs, des méthodes concrètes (avec code) et des méthodes abstraites (sans code, juste la signature).
 - On est donc obligé de créer une sous-classe qui en dérive et qui implémente les méthodes abstraites :
 
-> **À noter** : Même si une classe abstraite ne peut pas être instanciée directement, elle peut parfaitement définir un ou plusieurs constructeurs. Ceux-ci servent à initialiser les attributs hérités par les sous-classes. Lorsqu’une sous-classe hérite d’une classe abstraite, elle peut (et doit souvent) appeler le constructeur de la classe abstraite via `super(...)` dans son propre constructeur. Cela permet de garantir que l’état de l’objet est correctement initialisé, même si l’on ne crée jamais d’instance directe de la classe abstraite.
+::: tip À noter
+Même si une classe abstraite ne peut pas être instanciée directement, elle peut parfaitement définir un ou plusieurs constructeurs. Ceux-ci servent à initialiser les attributs hérités par les sous-classes. Lorsqu’une sous-classe hérite d’une classe abstraite, elle peut (et doit souvent) appeler le constructeur de la classe abstraite via `super(...)` dans son propre constructeur. Cela permet de garantir que l’état de l’objet est correctement initialisé, même si l’on ne crée jamais d’instance directe de la classe abstraite.
+:::
 
 ```java
 abstract class Forme {
@@ -149,7 +159,9 @@ Forme fc = new Cercle(new Point(5, 7), 3.0); // OK
 // Forme f = new Forme(new Point(0,0)); // Erreur : on ne peut pas instancier une classe abstraite
 ```
 
-> **Info** : Utilisez les classes abstraites pour définir des comportements communs à plusieurs classes, tout en forçant la spécialisation de certaines méthodes dans les sous-classes. Cela permet de garantir que toutes les sous-classes respecteront un contrat minimal.
+::: info
+Utilisez les classes abstraites pour définir des comportements communs à plusieurs classes, tout en forçant la spécialisation de certaines méthodes dans les sous-classes. Cela permet de garantir que toutes les sous-classes respecteront un contrat minimal.
+:::
 
 ---
 
@@ -183,7 +195,9 @@ public class Demo {
 }
 ```
 
-> **Astuce :** Utilisez `super` pour accéder à une méthode ou un constructeur parent, mais gardez en tête que le polymorphisme ne s'applique pas à `super`.
+::: tip Astuce
+Utilisez `super` pour accéder à une méthode ou un constructeur parent, mais gardez en tête que le polymorphisme ne s'applique pas à `super`.
+:::
 
 ---
 
@@ -236,7 +250,9 @@ Cet exemple est fondamental pour bien comprendre le comportement de l'héritage 
 
 L’héritage est directement concerné par le principe de substitution de Liskov (**L** de SOLID) : toute classe dérivée doit pouvoir être utilisée à la place de sa classe parente sans altérer le bon fonctionnement du programme.
 
-> **À retenir :** Respecter ce principe garantit la robustesse et la cohérence de vos hiérarchies de classes.
+::: tip À retenir
+Respecter ce principe garantit la robustesse et la cohérence de vos hiérarchies de classes.
+:::
 
 Pour une explication complète des principes SOLID, voir le chapitre dédié.
 

@@ -2,8 +2,9 @@
 
 La qualité de code est un critère fondamental pour tout développeur qui souhaite écrire des programmes robustes, évolutifs et faciles à maintenir. Avant même de parler d'architecture comme MVC, il est essentiel de comprendre deux notions clés : le découplage et la cohésion.
 
-> **Info :**
-> Un code de qualité n'est pas seulement « qui fonctionne », mais « qui reste compréhensible et modifiable dans le temps ».
+::: info
+Un code de qualité n'est pas seulement « qui fonctionne », mais « qui reste compréhensible et modifiable dans le temps ».
+:::
 
 ## Les deux piliers de la qualité de code
 
@@ -12,8 +13,9 @@ La qualité de code est un critère fondamental pour tout développeur qui souha
 
 Une bonne architecture vise à maximiser le découplage et la cohésion, pour rendre le code plus maintenable et évolutif.
 
-> **À retenir :**
-> Un code bien découpé et cohésif est plus facile à relire, à corriger et à faire évoluer, même plusieurs mois après l'avoir écrit !
+::: tip
+Un code bien découpé et cohésif est plus facile à relire, à corriger et à faire évoluer, même plusieurs mois après l'avoir écrit !
+:::
 
 ---
 
@@ -25,14 +27,13 @@ Deux classes sont dites couplées si elles dépendent l'une de l'autre. Un fort 
 
 **Exemple** : si la classe Vue dépend directement de la classe Modèle, tout changement dans le modèle peut casser la vue.
 
-> **Info :**
-> Pour découpler, on utilise souvent des interfaces, des listeners ou des injections de dépendances.
+::: info
+Pour découpler, on utilise souvent des interfaces, des listeners ou des injections de dépendances.
+:::
 
 Le découplage consiste à limiter ces dépendances, ce qui permet de remplacer ou de modifier une partie du code sans tout casser.
 
 **Exemple réel de découplage** :
-
-Supposons une application de messagerie :
 
 ```java
 // Interface pour notifier un nouvel événement
@@ -76,8 +77,9 @@ Une classe est cohésive si elle a une seule responsabilité claire.
 
 Une bonne cohésion rend le code plus lisible et plus facile à tester.
 
-> **À éviter :**
-> Une classe qui fait « un peu de tout » est difficile à comprendre et à maintenir. Privilégiez des classes simples et spécialisées.
+::: danger
+Une classe qui fait « un peu de tout » est difficile à comprendre et à maintenir. Privilégiez des classes simples et spécialisées.
+:::
 
 **Exemple réel de cohésion** :
 
@@ -112,8 +114,9 @@ L'architecture MVC favorise ces deux qualités :
 
 Cela rend l'application plus robuste et plus facile à faire évoluer.
 
-> **À retenir :**
-> MVC est un excellent exemple d'architecture qui pousse à écrire du code de qualité, en séparant bien les rôles et en limitant les dépendances.
+::: tip
+MVC est un excellent exemple d'architecture qui pousse à écrire du code de qualité, en séparant bien les rôles et en limitant les dépendances.
+:::
 
 ---
 

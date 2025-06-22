@@ -10,8 +10,9 @@ Le contrôleur FXML permet :
 - De faciliter le travail en équipe (un développeur peut travailler sur l’UI, un autre sur la logique).
 - D’associer facilement des événements (clics, saisies, etc.) à des méthodes Java.
 
-> **Info :**
-> Un bon découpage FXML/contrôleur permet de réutiliser des interfaces et de tester la logique métier indépendamment de l’UI.
+::: info
+Un bon découpage FXML/contrôleur permet de réutiliser des interfaces et de tester la logique métier indépendamment de l’UI.
+:::
 
 ## Cycle de vie d’un contrôleur FXML
 
@@ -24,8 +25,9 @@ Le contrôleur FXML permet :
 
 Dans le fichier FXML, on indique le contrôleur avec l'attribut `fx:controller` sur la balise racine (par exemple `<AnchorPane fx:controller="com.example.MyController">`). Cela permet à JavaFX de savoir quelle classe Java doit être associée à ce fichier FXML.
 
-> **Info :**
-> Le nom de la classe doit être complet (avec le package) et la classe doit avoir un constructeur sans paramètre (c'est le cas par défaut si tu ne déclares pas de constructeur).
+::: info
+Le nom de la classe doit être complet (avec le package) et la classe doit avoir un constructeur sans paramètre (c'est le cas par défaut si tu ne déclares pas de constructeur).
+:::
 
 ## Liaison des éléments FXML et du contrôleur
 
@@ -94,18 +96,12 @@ Dans le FXML :
 - **Préférer l’injection de dépendances** (via setters ou méthodes publiques) pour transmettre des données au contrôleur après le chargement.
 - **Documenter** les méthodes référencées dans le FXML pour faciliter la maintenance.
 
-> **Info :**
-> Un contrôleur bien conçu est simple, lisible, et ne fait que le lien entre l’UI et la logique métier.
+::: info
+Un contrôleur bien conçu est simple, lisible, et ne fait que le lien entre l’UI et la logique métier.
+:::
 
 ## Aller plus loin
 
-- Un même contrôleur peut être réutilisé pour plusieurs interfaces si besoin (attention à la cohérence des `fx:id`).
-- On peut charger dynamiquement plusieurs FXML et leurs contrôleurs pour composer des interfaces modulaires.
-- Il est possible de tester un contrôleur indépendamment de l’UI en simulant les appels à ses méthodes publiques.
-- Pour des interfaces complexes, il est recommandé de découper en plusieurs FXML et contrôleurs spécialisés.
-
-> **Info :**
-> Consulte la documentation officielle JavaFX pour découvrir toutes les possibilités offertes par FXML et les contrôleurs.
-
-> **À retenir :**
-> Le contrôleur FXML est la clé d’une architecture propre, modulaire et maintenable en JavaFX. Il permet de séparer l’UI de la logique, de gérer les événements et de rendre le code plus professionnel.
+::: tip
+Le contrôleur FXML est la clé d’une architecture propre, modulaire et maintenable en JavaFX. Il permet de séparer l’UI de la logique, de gérer les événements et de rendre le code plus professionnel.
+:::

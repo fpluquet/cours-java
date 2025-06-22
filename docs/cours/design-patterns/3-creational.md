@@ -2,8 +2,9 @@
 
 Les patterns de création facilitent la création d'objets tout en cachant la logique de création. Ils permettent de rendre le code plus flexible, testable et indépendant des classes concrètes.
 
-> **Info :**
-> Utilisez ces patterns pour éviter le couplage fort entre les classes et la logique de création d'objets.
+::: info
+Utilisez ces patterns pour éviter le couplage fort entre les classes et la logique de création d'objets.
+:::
 
 ## Singleton
 Le Singleton garantit qu'une classe n'a qu'une seule instance et fournit un point d'accès global à cette instance.
@@ -54,8 +55,9 @@ public class Database {
 }
 ```
 
-> **À retenir :**
-> Le constructeur est privé pour empêcher la création d'autres instances.
+::: warning
+Le constructeur est privé pour empêcher la création d'autres instances.
+:::
 
 ## Factory Method
 Permet de déléguer la création d'objets à des sous-classes, sans connaître la classe exacte à instancier.
@@ -243,7 +245,8 @@ Sheep s1 = new Sheep();
 Sheep s2 = s1.clone();
 ```
 
-> **Info :**
-> Le pattern Prototype est utile pour dupliquer rapidement des objets configurés.
+::: info
+Le pattern Prototype est utile pour dupliquer rapidement des objets configurés.
+:::
 
 Chaque pattern de création permet de résoudre des problèmes spécifiques liés à l'instanciation d'objets, tout en rendant le code plus flexible et maintenable.

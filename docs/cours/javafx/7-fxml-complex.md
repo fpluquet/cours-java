@@ -67,8 +67,9 @@ public void initialize() {
 }
 ```
 
-> **Info :**
-> Pour que l’injection de sous-contrôleurs fonctionne, il faut donner un `fx:id` à la balise `<fx:include>` dans le FXML parent.
+::: info
+Pour que l’injection de sous-contrôleurs fonctionne, il faut donner un `fx:id` à la balise `<fx:include>` dans le FXML parent.
+:::
 
 ### 5. Tester et maintenir
 - Chaque composant peut être testé séparément.

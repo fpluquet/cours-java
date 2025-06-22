@@ -2,7 +2,9 @@
 
 En Java, tout commence par les classes. Imaginez-les comme les plans d’un bâtiment : sans plan, impossible de construire quoi que ce soit ! Ainsi, en Java, rien n’existe en dehors d’une classe. C’est pourquoi il est essentiel de bien comprendre ce concept fondamental.
 
-> **À retenir** : Une classe, c’est le moule à partir duquel on fabrique des objets. Elle définit les caractéristiques (attributs) et les comportements (méthodes) communs à tous les objets de ce type.
+::: tip À retenir
+Une classe, c’est le moule à partir duquel on fabrique des objets. Elle définit les caractéristiques (attributs) et les comportements (méthodes) communs à tous les objets de ce type.
+:::
 
 ## Définition d'une classe et ses attributs
 
@@ -27,7 +29,9 @@ En Java, il existe plusieurs niveaux de visibilité qui déterminent qui peut ac
 - `private` : impossible d’y accéder depuis l’extérieur de la classe (et du package).
 - `protected` : accessible depuis les classes du même package, et depuis les sous-classes (même si elles sont dans un autre package).
 
-> **Info** : En début d’apprentissage, on utilise souvent `public` pour les classes principales, mais il est important de bien choisir la visibilité pour protéger ses données.
+::: info
+En début d’apprentissage, on utilise souvent `public` pour les classes principales, mais il est important de bien choisir la visibilité pour protéger ses données.
+:::
 
 Chaque classe hérite automatiquement de la classe `Object`, ce qui lui donne déjà certaines fonctionnalités de base (comme la méthode `toString()`, par exemple).
 
@@ -52,7 +56,9 @@ class Personne{
 
 Le constructeur porte toujours le même nom que la classe et ne retourne jamais de valeur.
 
-> **Remarque** : Si vous ne définissez pas de constructeur, Java en crée un par défaut (sans argument).
+::: info
+Si vous ne définissez pas de constructeur, Java en crée un par défaut (sans argument).
+:::
 
 ## Délégation de constructeurs
 
@@ -84,7 +90,9 @@ public class Personne{
 }
 ```
 
-> **Pourquoi déléguer ?** Cela permet d’éviter la duplication de code et de centraliser la logique d’initialisation.
+::: tip Pourquoi déléguer ?
+Cela permet d’éviter la duplication de code et de centraliser la logique d’initialisation.
+:::
 
 ## Redéfinition (surcharge) de constructeur
 
@@ -104,10 +112,14 @@ public Personne(int nom){
 }
 ```
 
-> **À savoir** : Le compilateur Java choisira automatiquement le constructeur approprié en fonction du nombre et du type des arguments fournis lors de la création de l’objet.
+::: info
+Le compilateur Java choisira automatiquement le constructeur approprié en fonction du nombre et du type des arguments fournis lors de la création de l’objet.
+:::
 
 ---
 
 Ainsi, les classes et leurs constructeurs sont les fondations de tout programme Java orienté objet. Bien les comprendre, c’est se donner les moyens de bâtir des programmes robustes et évolutifs.
 
-> **Pour aller plus loin** : Essayez de créer vos propres classes avec plusieurs constructeurs, et expérimentez la visibilité des attributs et des méthodes pour bien comprendre leur portée !
+::: tip Pour aller plus loin
+Essayez de créer vos propres classes avec plusieurs constructeurs, et expérimentez la visibilité des attributs et des méthodes pour bien comprendre leur portée !
+:::

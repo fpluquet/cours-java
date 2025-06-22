@@ -2,8 +2,9 @@
 
 Les patterns structurels facilitent la composition de classes et d'objets pour former des structures plus complexes. Ils permettent de rendre les architectures plus flexibles, évolutives et maintenables.
 
-> **Info :**
-> Utilisez ces patterns pour organiser et optimiser la structure de vos applications, sans modifier le code existant.
+::: info
+Utilisez ces patterns pour organiser et optimiser la structure de vos applications, sans modifier le code existant.
+:::
 
 ## Adapter
 Permet de faire collaborer des classes qui n'ont pas d'interface compatible.
@@ -51,8 +52,9 @@ class Adaptateur implements Cible {
 }
 ```
 
-> **À retenir :**
-> L'adaptateur agit comme un traducteur entre deux interfaces incompatibles.
+::: tip
+À retenir : L'adaptateur agit comme un traducteur entre deux interfaces incompatibles.
+:::
 
 ## Bridge
 Sépare l'abstraction de son implémentation pour qu'elles puissent évoluer indépendamment.
@@ -148,8 +150,9 @@ class Composite implements Composant {
 }
 ```
 
-> **Info :**
-> Le composite est très utilisé pour les structures arborescentes (ex : menus, systèmes de fichiers).
+::: info
+Le composite est très utilisé pour les structures arborescentes (ex : menus, systèmes de fichiers).
+:::
 
 ## Decorator
 Ajoute dynamiquement des responsabilités à un objet.
@@ -307,5 +310,6 @@ class ProxyService implements Service {
 }
 ```
 
-> **À retenir :**
-> Les patterns structurels facilitent la maintenance et l'évolution des architectures logicielles.
+::: tip
+À retenir : Les patterns structurels facilitent la maintenance et l'évolution des architectures logicielles.
+:::

@@ -2,8 +2,9 @@
 
 Dans cette section, nous allons voir concrètement comment appliquer le modèle MVC à un petit projet Java. L'objectif est de bien comprendre la séparation des rôles et la circulation de l'information entre les différentes parties.
 
-> **Info :**
-> Commencez toujours par un exemple simple pour bien saisir la logique du découpage MVC avant de passer à des applications plus complexes.
+::: info
+Commencez toujours par un exemple simple pour bien saisir la logique du découpage MVC avant de passer à des applications plus complexes.
+:::
 
 ## Exemple simple : gestion d'une personne
 
@@ -22,8 +23,9 @@ public class Personne {
 }
 ```
 
-> **À retenir :**
-> Le modèle ne s'occupe ni de l'affichage, ni de la gestion des interactions utilisateur.
+::: tip
+À retenir : Le modèle ne s'occupe ni de l'affichage, ni de la gestion des interactions utilisateur.
+:::
 
 ### La vue (console)
 
@@ -44,8 +46,9 @@ public class PersonneViewConsole {
 ```
 
 
-> **Info :**
-> On peut facilement créer d'autres vues (ex : graphique, web) qui utilisent le même modèle !
+::: info
+On peut facilement créer d'autres vues (ex : graphique, web) qui utilisent le même modèle !
+:::
 
 ### Le contrôleur (application)
 
@@ -61,8 +64,9 @@ public class Main {
 }
 ```
 
-> **À retenir :**
-> Le contrôleur relie le modèle et la vue, mais ne fait ni l'affichage, ni la gestion des données lui-même.
+::: tip
+À retenir : Le contrôleur relie le modèle et la vue, mais ne fait ni l'affichage, ni la gestion des données lui-même.
+:::
 
 ---
 

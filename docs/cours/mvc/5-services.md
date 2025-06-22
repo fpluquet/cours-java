@@ -2,8 +2,9 @@
 
 Dans une application moderne, le modèle MVC peut être enrichi par l'ajout d'une couche de **services**. Cette couche permet de séparer la logique métier complexe ou réutilisable du modèle lui-même, et d'améliorer la clarté et la maintenabilité du code.
 
-> **Info :**
-> Un service, c'est un « cerveau » qui applique les règles métier, alors que le modèle ne fait que stocker les données.
+::: info
+Un service, c'est un « cerveau » qui applique les règles métier, alors que le modèle ne fait que stocker les données.
+:::
 
 ## Qu'est-ce qu'un service ?
 Un service est une classe qui contient des méthodes métier (ex : calculs, règles de gestion, traitements sur les données) qui ne relèvent pas directement d'un seul modèle.
@@ -18,8 +19,9 @@ Un service est une classe qui contient des méthodes métier (ex : calculs, r�
 - **Alléger** les modèles et les contrôleurs
 - **Favoriser** les tests unitaires (on peut tester un service indépendamment du reste)
 
-> **À retenir :**
-> Un service ne gère ni l'affichage, ni la persistance : il ne fait que de la logique métier.
+::: tip
+Un service ne gère ni l'affichage, ni la persistance : il ne fait que de la logique métier.
+:::
 
 ## Exemple simple
 Voici un exemple de service pour le modèle `Personne` :
@@ -72,8 +74,9 @@ public class PersonneService {
 }
 ```
 
-> **Info :**
-> Injecter le repository dans le service permet de tester le service avec une base réelle ou simulée (en mémoire).
+::: info
+Injecter le repository dans le service permet de tester le service avec une base réelle ou simulée (en mémoire).
+:::
 
 ---
 
@@ -97,13 +100,6 @@ graph TD;
   Contrôleur -->|met à jour| Vue;
 ```
 
-> **À retenir :**
-> Les services sont le cœur de la logique métier : ils orchestrent les modèles, les repositories et parfois d’autres services, mais ne s’occupent jamais d’affichage ou de persistance directe.
-
-## Où placer les services dans MVC ?
-- Les **contrôleurs** font appel aux services pour appliquer la logique métier
-- Les **modèles** restent simples (données + méthodes de base)
-- Les **vues** n'appellent jamais directement les services
-
-> **Info :**
-> Utiliser des services permet de garder des modèles simples et des contrôleurs légers, tout en centralisant la logique métier. Cela rend aussi le code plus facile à tester et à faire évoluer.
+::: tip
+À retenir : Un service ne gère ni l'affichage, ni la persistance : il ne fait que de la logique métier.
+:::

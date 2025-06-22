@@ -2,7 +2,9 @@
 
 Les interfaces sont un concept fondamental de la programmation orientée objet en Java. Elles permettent de définir des contrats que les classes doivent respecter, sans imposer d’implémentation concrète. Cela favorise la flexibilité, le découplage et la réutilisabilité du code.
 
-> **Définition** : Une interface définit ce qu’une classe doit faire, mais pas comment elle doit le faire. Elle impose un contrat, c’est-à-dire un ensemble de méthodes que toute classe qui « implémente » l’interface doit obligatoirement fournir.
+::: info
+Une interface définit ce qu’une classe doit faire, mais pas comment elle doit le faire. Elle impose un contrat, c’est-à-dire un ensemble de méthodes que toute classe qui « implémente » l’interface doit obligatoirement fournir.
+:::
 
 ## Pourquoi utiliser les interfaces ?
 
@@ -11,7 +13,9 @@ Les interfaces sont un concept fondamental de la programmation orientée objet e
 - **Testabilité** : Les interfaces facilitent la création de fausses implémentations (mocks) pour les tests unitaires.
 - **Extensibilité** : On peut ajouter de nouvelles implémentations sans modifier le code existant.
 
-> **Analogie** : Une interface, c’est comme un contrat de location : le propriétaire (l’interface) impose des règles (méthodes à implémenter), mais chaque locataire (classe concrète) peut meubler l’appartement à sa façon (implémentation différente).
+::: tip Analogie
+Une interface, c’est comme un contrat de location : le propriétaire (l’interface) impose des règles (méthodes à implémenter), mais chaque locataire (classe concrète) peut meubler l’appartement à sa façon (implémentation différente).
+:::
 
 ---
 
@@ -36,7 +40,9 @@ public interface Perimetrable {
 }
 ```
 
-> **Info** : Par convention, le nom d’une interface commence par une majuscule. On utilise souvent un nom qui exprime une capacité ou un rôle (ex : `Serializable`, `Comparable`, `Runnable`).
+::: info
+Par convention, le nom d’une interface commence par une majuscule. On utilise souvent un nom qui exprime une capacité ou un rôle (ex : `Serializable`, `Comparable`, `Runnable`).
+:::
 
 ---
 
@@ -70,10 +76,12 @@ class Main {
 }
 ```
 
-> **À savoir** : On peut caster une variable pour accéder à des méthodes spécifiques à la classe :
-> ```java
-> System.out.println(((Carre)p).getCote()); // OK
-> ```
+::: tip
+On peut caster une variable pour accéder à des méthodes spécifiques à la classe :
+```java
+System.out.println(((Carre)p).getCote()); // OK
+```
+:::
 
 ---
 
@@ -100,7 +108,9 @@ class Rectangle extends Forme {
 }
 ```
 
-> **Remarque** : Une classe abstraite peut aussi implémenter une interface, mais elle n’est pas obligée d’implémenter toutes les méthodes de l’interface. Ce sera alors aux sous-classes concrètes de le faire.
+::: info
+Une classe abstraite peut aussi implémenter une interface, mais elle n’est pas obligée d’implémenter toutes les méthodes de l’interface. Ce sera alors aux sous-classes concrètes de le faire.
+:::
 
 ---
 
@@ -133,7 +143,9 @@ interface ComplexPerimetrable extends Perimetrable {
 
 - Une interface qui hérite d’une autre interface hérite de toutes ses méthodes.
 
-> **Exemple** : L’interface `List` hérite de `Collection`, qui hérite de `Iterable`.
+::: tip
+Exemple : L’interface `List` hérite de `Collection`, qui hérite de `Iterable`.
+:::
 
 ---
 
@@ -141,9 +153,22 @@ interface ComplexPerimetrable extends Perimetrable {
 
 En UML, les interfaces sont représentées par le stéréotype `<<interface>>` ou par une classe avec une petite flèche en pointillés.
 
-![Implémentation d'interface en UML]()
+  
+```mermaid
+classDiagram
+    class Perimetrable {
+        <<interface>>
+        +getPerimetre()
+    }
+    class Forme
+    class Rectangle
 
-La flèche en pointillés va de la classe concrète vers l’interface.
+    Forme <|-- Rectangle
+    Perimetrable <|.. Forme
+    Perimetrable <|.. Rectangle
+```
+
+La "flèche" en pointillés va de la classe vers l’interface. L'héritage est représenté par une flèche pleine.
 
 ---
 
@@ -159,7 +184,9 @@ interface MonInterface {
 }
 ```
 
-> **Info** : Les méthodes par défaut sont utiles pour faire évoluer une interface sans forcer toutes les classes à réécrire du code. Cela permet d’ajouter de nouvelles fonctionnalités tout en maintenant la compatibilité avec les anciennes implémentations.
+::: info
+Les méthodes par défaut sont utiles pour faire évoluer une interface sans forcer toutes les classes à réécrire du code. Cela permet d’ajouter de nouvelles fonctionnalités tout en maintenant la compatibilité avec les anciennes implémentations.
+:::
 
 ---
 
@@ -167,7 +194,9 @@ interface MonInterface {
 
 Le **découplage** consiste à séparer les différentes parties d’un programme pour qu’elles dépendent le moins possible les unes des autres. En Java, cela se fait principalement en programmant contre des **interfaces** plutôt que des classes concrètes. Ainsi, une classe ne connaît que le contrat (l’interface) et non l’implémentation précise.
 
-> **À retenir :** Le découplage permet de rendre le code plus flexible, évolutif et testable. On peut changer l’implémentation sans modifier le code qui l’utilise.
+::: tip
+Le découplage permet de rendre le code plus flexible, évolutif et testable. On peut changer l’implémentation sans modifier le code qui l’utilise.
+:::
 
 ### Exemple sans découplage (couplage fort)
 
@@ -238,10 +267,11 @@ public class Main {
 }
 ```
 
-> **Bénéfices :**
-> - L’application ne dépend plus d’une implémentation concrète, mais d’une abstraction (l’interface).
-> - On peut ajouter de nouveaux canaux (Push, Discord, etc.) sans modifier la classe `Application`.
-> - Pour les tests, on peut injecter une fausse implémentation qui enregistre les messages sans rien envoyer.
+::: tip Bénéfices
+- L’application ne dépend plus d’une implémentation concrète, mais d’une abstraction (l’interface).
+- On peut ajouter de nouveaux canaux (Push, Discord, etc.) sans modifier la classe `Application`.
+- Pour les tests, on peut injecter une fausse implémentation qui enregistre les messages sans rien envoyer.
+:::
 
 ---
 
@@ -271,7 +301,9 @@ classDiagram
 - Les flèches en pointillés montrent l’implémentation de l’interface.
 - `Application` dépend uniquement de l’interface `CanalNotification`.
 
-> **Info :** Pour les tests, créez une classe `CanalNotificationTest` qui stocke les messages dans une liste.
+::: info
+Pour les tests, créez une classe `CanalNotificationTest` qui stocke les messages dans une liste.
+:::
 
 ---
 
@@ -279,10 +311,11 @@ classDiagram
 
 L’**injection de dépendance** est une technique qui consiste à fournir à une classe ses dépendances (autres objets dont elle a besoin) depuis l’extérieur, plutôt que de les créer elle-même. Cela va plus loin que le simple découplage : on délègue la responsabilité de la création des objets à un autre composant (ou au code appelant).
 
-> **À retenir :**
-> - Le découplage est un principe : on programme contre une abstraction (interface).
-> - L’injection de dépendance est une technique : on fournit les dépendances à la classe, souvent via le constructeur (ou un setter).
-> - L’injection de dépendance exploite le découplage pour rendre le code encore plus flexible et testable.
+::: tip
+- Le découplage est un principe : on programme contre une abstraction (interface).
+- L’injection de dépendance est une technique : on fournit les dépendances à la classe, souvent via le constructeur (ou un setter).
+- L’injection de dépendance exploite le découplage pour rendre le code encore plus flexible et testable.
+:::
 
 ### Exemple : notification avec injection de dépendance
 
@@ -303,16 +336,18 @@ class Application {
 Application app = new Application(new EmailNotification());
 ```
 
-> **Pédagogie :**
-> - On peut injecter n’importe quelle implémentation de l’interface.
-> - On peut injecter une fausse implémentation pour les tests (mock).
-> - Cela facilite l’évolution du code et le respect du principe d’inversion de dépendance (SOLID).
+::: tip Important
+- On peut injecter n’importe quelle implémentation de l’interface.
+- On peut injecter une fausse implémentation pour les tests (mock).
+- Cela facilite l’évolution du code et le respect du principe d’inversion de dépendance (SOLID).
+:::
 
 ---
 
-> **Résumé :**
-> - Le découplage permet de programmer contre une interface.
-> - L’injection de dépendance permet de choisir dynamiquement l’implémentation à utiliser, ce qui rend le code modulaire, testable et évolutif.
+::: tip Résumé
+- Le découplage permet de programmer contre une interface.
+- L’injection de dépendance permet de choisir dynamiquement l’implémentation à utiliser, ce qui rend le code modulaire, testable et évolutif.
+:::
 
 *L’injection de dépendance est un pilier de la conception modulaire et testable en Java. Essayez de l’appliquer dans vos projets pour gagner en flexibilité et en qualité de code !*
 
@@ -328,7 +363,9 @@ Les interfaces jouent un rôle clé dans deux principes SOLID :
 - **D** (Dependency Inversion Principle) : Dépendre des abstractions (interfaces), pas des implémentations concrètes.
 - **I** (Interface Segregation Principle) : Mieux vaut plusieurs petites interfaces spécifiques qu’une grosse interface générale.
 
-> **À retenir :** Les interfaces permettent d’appliquer ces principes pour rendre le code plus flexible, modulaire et testable.
+::: tip
+Les interfaces permettent d’appliquer ces principes pour rendre le code plus flexible, modulaire et testable.
+:::
 
 Pour une explication complète des principes SOLID, voir le chapitre dédié.
 
