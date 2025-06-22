@@ -191,6 +191,10 @@ try (CountingInputStream cis = new CountingInputStream(new BufferedInputStream(n
 Le pattern décorateur permet d’ajouter des fonctionnalités sans modifier les classes existantes, en respectant le principe « open/closed » (ouvert à l’extension, fermé à la modification).
 :::
 
+::: tip Plus d'informations
+Pour en savoir plus sur le design pattern décorateur, rendez-vous dans le chapitre [Design Patterns](../design-patterns/1-intro.md).
+:::
+
 ---
 
 ## 5. Le try-with-resources : gestion automatique des ressources

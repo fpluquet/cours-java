@@ -34,14 +34,30 @@ Un pattern est généralement décrit par :
 Apprenez à reconnaître les patterns dans le code existant, cela vous aidera à mieux comprendre et à améliorer des projets complexes.
 :::
 
-## Exemples de design patterns célèbres
-- Singleton
-- Factory
-- Observer
-- Decorator
-- Strategy
-- Composite
-- Command
-- ...
+## Liste complète des design patterns présentés (ordre alphabétique)
 
-Dans les fichiers suivants, nous allons explorer les principales familles de design patterns, leurs usages, et des exemples concrets en Java, accompagnés d'explications pédagogiques.
+- [Abstract Factory](./3-creational.md#abstract-factory)
+- [Adapter](./4-structural.md#adapter)
+- [Bridge](./4-structural.md#bridge)
+- [Builder](./3-creational.md#builder)
+- [Chain of Responsibility](./5-behavioral.md#chain-of-responsibility)
+- [Command](./5-behavioral.md#command)
+- [Composite](./4-structural.md#composite)
+- [Decorator](./4-structural.md#decorator)
+- [Double Dispatch](./5-behavioral.md#double-dispatch)
+- [Facade](./4-structural.md#facade)
+- [Factory Method](./3-creational.md#factory-method)
+- [Flyweight](./4-structural.md#flyweight)
+- [Iterator](./5-behavioral.md#iterator)
+- [Mediator](./5-behavioral.md#mediator)
+- [Memento](./5-behavioral.md#memento)
+- [Observer](./5-behavioral.md#observer)
+- [Prototype](./3-creational.md#prototype)
+- [Proxy](./4-structural.md#proxy)
+- [Singleton](./3-creational.md#singleton)
+- [State](./5-behavioral.md#state)
+- [Strategy](./5-behavioral.md#strategy)
+- [Template Method](./5-behavioral.md#template-method)
+- [Visitor](./5-behavioral.md#visitor)
+
+Vous pouvez cliquer sur chaque nom pour accéder directement à la section détaillée du pattern correspondant.
