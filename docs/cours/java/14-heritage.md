@@ -1,12 +1,22 @@
 # Héritage
 
-L’héritage est un des piliers de la programmation orientée objet. Il permet de créer de nouvelles classes à partir de classes existantes, en réutilisant et en spécialisant leur comportement. Cela favorise la factorisation du code et la création de hiérarchies logiques.
+L’héritage est l’un des concepts fondamentaux de la programmation orientée objet (POO), au même titre que l’encapsulation et le polymorphisme. Il permet de créer de nouvelles classes à partir de classes existantes, en réutilisant et en spécialisant leur comportement. Grâce à l’héritage, on peut factoriser le code commun à plusieurs classes et organiser les concepts de manière hiérarchique, ce qui favorise la lisibilité, la maintenance et l’évolution des programmes.
 
-> **À retenir** : Grâce à l’héritage, une classe « enfant » hérite des attributs et méthodes de sa classe « parent », et peut en ajouter ou en modifier.
+> **Définition** : L’héritage consiste à définir une nouvelle classe (dite « classe dérivée » ou « classe enfant ») à partir d’une classe existante (dite « classe de base » ou « classe parente »). La classe enfant hérite des attributs et des méthodes de la classe parente, et peut en ajouter ou en modifier.
+
+## Pourquoi utiliser l’héritage ?
+
+- **Réutilisation du code** : Éviter de réécrire plusieurs fois le même code dans différentes classes.
+- **Organisation logique** : Structurer les concepts selon des relations « est-un » (ex : un Chien est un Animal).
+- **Extensibilité** : Ajouter facilement de nouveaux comportements spécifiques sans toucher au code existant.
+
+> **Exemple d’analogie** : Dans la vie courante, on peut dire qu’un vélo, une voiture et un camion sont tous des véhicules. Ils partagent des caractéristiques communes (roues, moteur, capacité à se déplacer), mais chacun a aussi ses particularités. En POO, on modélisera cela par une classe `Vehicule` dont hériteront les classes `Velo`, `Voiture`, `Camion`.
+
+---
 
 ## Mot-clef `extends`
 
-Pour hériter d’une classe en Java, on utilise le mot-clé `extends`.
+Pour hériter d’une classe en Java, on utilise le mot-clé `extends`. Cela signifie littéralement « étendre » la classe de base, c’est-à-dire en reprendre les caractéristiques tout en les complétant ou en les spécialisant.
 
 ```java
 class Personne {
@@ -34,11 +44,15 @@ class Enfant extends Personne {
 }
 ```
 
-> **Info** : Le mot-clé `super` permet d’appeler le constructeur ou les méthodes de la classe parente.
+Dans cet exemple, les classes `Adulte` et `Enfant` héritent de la classe `Personne`. Elles récupèrent automatiquement les attributs `nom` et `prenom`, ainsi que les méthodes publiques de `Personne`. Elles peuvent aussi ajouter leurs propres attributs ou redéfinir des méthodes si besoin.
+
+> **Info** : Le mot-clé `super` permet d’appeler le constructeur ou les méthodes de la classe parente. C’est utile pour initialiser les attributs hérités ou réutiliser du code parent.
+
+---
 
 ## Polymorphisme de méthodes
 
-Le polymorphisme permet d’utiliser un objet enfant comme s’il était de type parent. Cela autorise l’utilisation de méthodes de la classe parente, mais ces méthodes peuvent être redéfinies (surchargées) dans la classe enfant.
+Le polymorphisme est la capacité d’un même nom de méthode à se comporter différemment selon l’objet qui la porte. Grâce à l’héritage, on peut utiliser un objet enfant comme s’il était de type parent. Cela autorise l’utilisation de méthodes de la classe parente, mais ces méthodes peuvent être redéfinies (on parle alors de « surcharge » ou plutôt de « redéfinition », en anglais *override*) dans la classe enfant.
 
 ```java
 class Point {
@@ -95,14 +109,20 @@ public class Program {
 }
 ```
 
-> **À savoir** : Le mot-clé `@Override` indique que la méthode redéfinit une méthode de la classe parente. Cela permet d’éviter les erreurs de signature.
+Dans ce code, la méthode `getNom()` est redéfinie dans chaque sous-classe. Lorsqu’on appelle `getHelloStr()` sur une variable de type `Forme`, c’est la version la plus spécialisée de `getNom()` qui est utilisée, selon le type réel de l’objet (ici, `Cercle` ou `Rectangle`).
+
+> **À savoir** : Le mot-clé `@Override` indique que la méthode redéfinit une méthode de la classe parente. Cela permet d’éviter les erreurs de signature et améliore la lisibilité du code.
+
+---
 
 ## Classes abstraites
 
-Une classe abstraite est une classe que l’on ne peut pas instancier directement. Elle sert de modèle pour d’autres classes, qui devront en hériter et compléter les méthodes abstraites.
+Une classe abstraite est une classe que l’on ne peut pas instancier directement. Elle sert de modèle pour d’autres classes, qui devront en hériter et compléter les méthodes abstraites. C’est un outil puissant pour imposer une structure commune à plusieurs classes, tout en laissant la liberté de spécialiser certains comportements.
 
-- Une classe abstraite peut contenir des attributs, des méthodes concrètes (avec code) et des méthodes abstraites (sans code).
-- On est donc obligé de créer une sous-classe qui en dérive :
+- Une classe abstraite peut contenir des attributs, des méthodes concrètes (avec code) et des méthodes abstraites (sans code, juste la signature).
+- On est donc obligé de créer une sous-classe qui en dérive et qui implémente les méthodes abstraites :
+
+> **À noter** : Même si une classe abstraite ne peut pas être instanciée directement, elle peut parfaitement définir un ou plusieurs constructeurs. Ceux-ci servent à initialiser les attributs hérités par les sous-classes. Lorsqu’une sous-classe hérite d’une classe abstraite, elle peut (et doit souvent) appeler le constructeur de la classe abstraite via `super(...)` dans son propre constructeur. Cela permet de garantir que l’état de l’objet est correctement initialisé, même si l’on ne crée jamais d’instance directe de la classe abstraite.
 
 ```java
 abstract class Forme {
@@ -110,12 +130,17 @@ abstract class Forme {
     public Forme(Point c) {
         this.centre = c;
     }
+    public abstract double getAire(); // Méthode abstraite
 }
 class Cercle extends Forme {
     protected double rayon;
     public Cercle(Point c, double rayon) {
-        super(c);
+        super(c); // Appel du constructeur de la classe abstraite
         this.rayon = rayon;
+    }
+    @Override
+    public double getAire() {
+        return Math.PI * rayon * rayon;
     }
 }
 // Dans le main :
@@ -124,7 +149,9 @@ Forme fc = new Cercle(new Point(5, 7), 3.0); // OK
 // Forme f = new Forme(new Point(0,0)); // Erreur : on ne peut pas instancier une classe abstraite
 ```
 
-> **Info** : Utilisez les classes abstraites pour définir des comportements communs à plusieurs classes, tout en forçant la spécialisation de certaines méthodes dans les sous-classes.
+> **Info** : Utilisez les classes abstraites pour définir des comportements communs à plusieurs classes, tout en forçant la spécialisation de certaines méthodes dans les sous-classes. Cela permet de garantir que toutes les sous-classes respecteront un contrat minimal.
+
+---
 
 ## Le mot-clé `super` et la résolution statique
 
@@ -156,9 +183,9 @@ public class Demo {
 }
 ```
 
+> **Astuce :** Utilisez `super` pour accéder à une méthode ou un constructeur parent, mais gardez en tête que le polymorphisme ne s'applique pas à `super`.
 
-> **Astuce :**
-> Utilisez `super` pour accéder à une méthode ou un constructeur parent, mais gardez en tête que le polymorphisme ne s'applique pas à `super`.
+---
 
 ## Détail de l'exemple sur `super` et `this`
 
@@ -205,10 +232,6 @@ Cet exemple est fondamental pour bien comprendre le comportement de l'héritage 
 
 ---
 
-L’héritage et le polymorphisme sont essentiels pour structurer des programmes évolutifs et réutilisables. N’hésitez pas à expérimenter avec vos propres hiérarchies de classes pour bien comprendre leur puissance et leurs subtilités !
-
----
-
 ## Encadré : SOLID et héritage
 
 L’héritage est directement concerné par le principe de substitution de Liskov (**L** de SOLID) : toute classe dérivée doit pouvoir être utilisée à la place de sa classe parente sans altérer le bon fonctionnement du programme.
@@ -216,3 +239,13 @@ L’héritage est directement concerné par le principe de substitution de Lisko
 > **À retenir :** Respecter ce principe garantit la robustesse et la cohérence de vos hiérarchies de classes.
 
 Pour une explication complète des principes SOLID, voir le chapitre dédié.
+
+---
+
+## Pour aller plus loin
+
+- **Composition vs héritage** : L’héritage n’est pas la seule façon de réutiliser du code. Parfois, il est préférable d’utiliser la composition (une classe possède une autre classe) plutôt que l’héritage (une classe est une autre classe). On parle alors du principe « favor composition over inheritance ».
+- **Limites de l’héritage** : Un mauvais usage de l’héritage peut conduire à des hiérarchies trop rigides ou à des problèmes de maintenance. Il est important de bien réfléchir à la structure de ses classes.
+- **Interfaces** : En Java, une classe peut hériter d’une seule classe (héritage simple), mais peut implémenter plusieurs interfaces. Les interfaces permettent de définir des contrats que les classes doivent respecter, sans imposer d’implémentation.
+
+N’hésitez pas à expérimenter avec vos propres hiérarchies de classes pour bien comprendre la puissance et les subtilités de l’héritage en Java !

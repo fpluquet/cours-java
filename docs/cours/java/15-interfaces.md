@@ -2,7 +2,18 @@
 
 Les interfaces sont un concept fondamental de la programmation orientée objet en Java. Elles permettent de définir des contrats que les classes doivent respecter, sans imposer d’implémentation concrète. Cela favorise la flexibilité, le découplage et la réutilisabilité du code.
 
-> **À retenir** : Une interface définit ce qu’une classe doit faire, mais pas comment elle doit le faire.
+> **Définition** : Une interface définit ce qu’une classe doit faire, mais pas comment elle doit le faire. Elle impose un contrat, c’est-à-dire un ensemble de méthodes que toute classe qui « implémente » l’interface doit obligatoirement fournir.
+
+## Pourquoi utiliser les interfaces ?
+
+- **Découplage** : Les interfaces permettent de séparer le « quoi » (le contrat) du « comment » (l’implémentation). Cela rend le code plus flexible et plus facile à faire évoluer.
+- **Polymorphisme** : On peut manipuler des objets de différentes classes via une même interface, ce qui permet d’écrire du code générique et réutilisable.
+- **Testabilité** : Les interfaces facilitent la création de fausses implémentations (mocks) pour les tests unitaires.
+- **Extensibilité** : On peut ajouter de nouvelles implémentations sans modifier le code existant.
+
+> **Analogie** : Une interface, c’est comme un contrat de location : le propriétaire (l’interface) impose des règles (méthodes à implémenter), mais chaque locataire (classe concrète) peut meubler l’appartement à sa façon (implémentation différente).
+
+---
 
 ## Qu'est-ce qu'une interface ?
 
@@ -25,7 +36,9 @@ public interface Perimetrable {
 }
 ```
 
-> **Info** : Par convention, le nom d’une interface commence par une majuscule.
+> **Info** : Par convention, le nom d’une interface commence par une majuscule. On utilise souvent un nom qui exprime une capacité ou un rôle (ex : `Serializable`, `Comparable`, `Runnable`).
+
+---
 
 ## Utilisation d'une interface
 
@@ -58,14 +71,16 @@ class Main {
 ```
 
 > **À savoir** : On peut caster une variable pour accéder à des méthodes spécifiques à la classe :
->
 > ```java
 > System.out.println(((Carre)p).getCote()); // OK
 > ```
 
+---
+
 ## Implémentation d'une interface
 
-- Utilisation du mot-clef `implements` :
+- Utilisation du mot-clef `implements` : une classe peut implémenter une ou plusieurs interfaces, en séparant les noms par des virgules.
+- Une classe qui implémente une interface doit fournir une implémentation pour toutes les méthodes abstraites de l’interface.
 
 ```java
 class Forme implements Perimetrable {
@@ -85,6 +100,10 @@ class Rectangle extends Forme {
 }
 ```
 
+> **Remarque** : Une classe abstraite peut aussi implémenter une interface, mais elle n’est pas obligée d’implémenter toutes les méthodes de l’interface. Ce sera alors aux sous-classes concrètes de le faire.
+
+---
+
 ## Implémentation de plusieurs interfaces
 
 - Une classe peut implémenter plusieurs interfaces :
@@ -96,6 +115,8 @@ public class Forme implements Perimetrable, java.io.Serializable {
 ```
 
 - Si deux interfaces héritées ont des méthodes de même signature, il suffit de l’implémenter une seule fois.
+
+---
 
 ## Hiérarchie d'interfaces
 
@@ -112,13 +133,19 @@ interface ComplexPerimetrable extends Perimetrable {
 
 - Une interface qui hérite d’une autre interface hérite de toutes ses méthodes.
 
+> **Exemple** : L’interface `List` hérite de `Collection`, qui hérite de `Iterable`.
+
+---
+
 ## Interfaces et UML
 
 En UML, les interfaces sont représentées par le stéréotype `<<interface>>` ou par une classe avec une petite flèche en pointillés.
 
-![Implémentation d'interface en UML](https://i.stack.imgur.com/ztO39.png)
+![Implémentation d'interface en UML]()
 
 La flèche en pointillés va de la classe concrète vers l’interface.
+
+---
 
 ## Méthodes par défaut
 
@@ -132,7 +159,9 @@ interface MonInterface {
 }
 ```
 
-> **Info** : Les méthodes par défaut sont utiles pour faire évoluer une interface sans forcer toutes les classes à réécrire du code.
+> **Info** : Les méthodes par défaut sont utiles pour faire évoluer une interface sans forcer toutes les classes à réécrire du code. Cela permet d’ajouter de nouvelles fonctionnalités tout en maintenant la compatibilité avec les anciennes implémentations.
+
+---
 
 ## Découplage grâce aux interfaces
 
@@ -302,3 +331,13 @@ Les interfaces jouent un rôle clé dans deux principes SOLID :
 > **À retenir :** Les interfaces permettent d’appliquer ces principes pour rendre le code plus flexible, modulaire et testable.
 
 Pour une explication complète des principes SOLID, voir le chapitre dédié.
+
+---
+
+## Pour aller plus loin
+
+- **Interfaces vs classes abstraites** : Les interfaces définissent uniquement un contrat, tandis que les classes abstraites peuvent fournir une implémentation partielle. Une classe peut implémenter plusieurs interfaces, mais n’hériter que d’une seule classe abstraite.
+- **Interfaces fonctionnelles** : Utilisées pour la programmation fonctionnelle et les expressions lambda (voir chapitre 19).
+- **API Java** : De nombreuses API Java reposent sur les interfaces (`List`, `Map`, `Runnable`, etc.).
+
+N’hésitez pas à expérimenter avec vos propres interfaces pour bien comprendre leur utilité et leur puissance en Java !
