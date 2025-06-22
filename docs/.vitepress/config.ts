@@ -87,6 +87,14 @@ export default withMermaid({
         ]
       }
     ],
+    socialLinks: [
+      // You can add any icon from simple-icons (https://simpleicons.org/):
+      { icon: 'github', link: 'https://github.com/fpluquet/cours-java/' },
+    ],
+    editLink: {
+      pattern: 'https://github.com/fpluquet/cours-java/edit/master/docs/:path',
+      text: 'Modifier cette page'
+    },
     search: {
       provider: 'local'
     },
