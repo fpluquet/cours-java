@@ -8,7 +8,7 @@ title: Cours de Java
 
 # Bienvenue sur le site du cours de Java
 
-Ce site regroupe tout le contenu du cours de Java, JavaFX, l'architecture MVC et les Design Patterns pour l'année académique 2024-2025 à la HELHa.
+Ce site regroupe tout le contenu du cours de Java, JavaFX, l'architecture MVC, les Design Patterns et Génie Logiciel de Pluquet Frédéric, maître assistant à la Haute École Louvain en Hainaut (HELHa) et maître de conférence à l'Université Libre de Bruxelles (ULB).
 
 ## Accès rapide aux chapitres
 
@@ -16,11 +16,13 @@ Ce site regroupe tout le contenu du cours de Java, JavaFX, l'architecture MVC et
 - [JavaFX](./cours/javafx/1-javafx-cest-quoi.md)
 - [Architecture MVC](./cours/mvc/1-introduction.md)
 - [Design Patterns](./cours/design-patterns/1-intro.md)
+- [Génie Logiciel](./cours/genie-logiciel/introduction.md)
 
 ## À propos
 
-Ce syllabus a été conçu par Frédéric Pluquet (HELHa, Année académique 2024-2025), avec une pensée reconnaissante pour Dudziak Thomas, ancien étudiant, qui a contribué à la base de ce document. 
-Ce cours est vivant : il est disponible sur [GitLab](https://gitlab.com/fpluquet/cours-de-java) et toutes suggestions d’amélioration sont les bienvenues.
+Ce cours a été construit sur les notes personnelles de Pluquet Frédéric (et celles de Thomas Dudziak), enrichies par des recherches et des exemples pratiques, saupoudrées de complétions d'IA :) Il est destiné à aider les étudiants à comprendre les concepts fondamentaux de la programmation en Java, ainsi que les bonnes pratiques de développement logiciel.
+
+Ce cours est vivant : il est disponible sur [GitHub](https://github.com/fpluquet/cours-java) et toutes suggestions d’amélioration sont les bienvenues.
 
 ## Technologie pour ce support
 

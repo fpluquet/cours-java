@@ -244,6 +244,30 @@ ois.close();
 La classe à sérialiser doit implémenter `Serializable`.
 :::
 
+::: warning Important
+Pour qu'un objet soit sérialisable, tous ses attributs doivent être sérialisables. Donc si un attribut est un object d'une classe non sérialisable, la sérialisation échouera.
+
+Cependant, vous pouvez utiliser le mot-clé `transient` pour ignorer certains attributs (par exemple, les connexions réseau, les données temporaires). 
+
+```java
+class Personne implements Serializable {
+    private String nom;
+    private String prenom;
+    private transient int age; // Ne sera pas sérialisé
+
+    public Personne(String nom, String prenom, int age) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.age = age;
+    }
+
+    // Getters et setters...
+}
+```
+
+Lors de la désérialisation, un attribut `transient` sera initialisé à sa valeur par défaut (0 pour `int`, `null` pour les objets, etc.).
+:::
+
 ---
 
 ## 7. Lecture/écriture moderne : NIO (Files, Paths, etc.)

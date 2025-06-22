@@ -7,6 +7,8 @@ La programmation réseau permet à plusieurs programmes de communiquer entre eux
 - **ServerSocket** : Côté serveur, il attend les connexions entrantes sur un port donné. Lorsqu'un client se connecte, le serveur accepte la connexion et obtient un objet `Socket` pour dialoguer avec ce client.
 - **InputStream/OutputStream** : Permettent de lire et d'écrire des données sur la connexion réseau. En général, on les encapsule dans des classes plus pratiques comme `BufferedReader` et `PrintWriter` pour manipuler des chaînes de caractères.
 
+
+
 ## Fonctionnement général
 - Le **serveur** crée un `ServerSocket` et attend qu'un client se connecte (appel à `accept()`).
 - Le **client** crée un `Socket` et se connecte à l'adresse IP et au port du serveur.
@@ -130,6 +132,47 @@ public class ClientMulti {
     }
 }
 ```
+
+## Envoyer des objets via la sérialisation
+
+En Java, il est possible d'envoyer non seulement des chaînes de caractères, mais aussi des objets complets à travers un socket. Pour cela, on utilise la sérialisation (que l'on a déjà vue dans le chapitre sur les fichiers) : l'objet est transformé en une suite d'octets, transmise sur le réseau, puis reconstruite (désérialisée) de l'autre côté.
+
+Pour cela, il faut :
+- Que la classe de l'objet à transmettre implémente l'interface `Serializable`.
+- Utiliser `ObjectOutputStream` et `ObjectInputStream` à la place de `PrintWriter` et `BufferedReader`.
+
+### Exemple d'envoi d'un objet
+Supposons une classe simple :
+```java
+import java.io.Serializable;
+public class Message implements Serializable {
+    private String texte;
+    public Message(String texte) { this.texte = texte; }
+    public String getTexte() { return texte; }
+}
+```
+
+#### Côté serveur
+```java
+ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+Object obj = in.readObject();
+if (obj instanceof Message) {
+    Message m = (Message) obj;
+    System.out.println("Reçu : " + m.getTexte());
+}
+```
+
+#### Côté client
+```java
+ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+Message m = new Message("Bonjour serveur !");
+out.writeObject(m);
+out.flush();
+```
+
+::: info
+La sérialisation permet d'envoyer des objets complexes (listes, objets personnalisés, etc.) très facilement, mais il faut que toutes les classes utilisées soient bien `Serializable`.
+:::
 
 ## À retenir
 - Toujours fermer les sockets après utilisation.

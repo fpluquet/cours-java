@@ -73,6 +73,16 @@ export default withMermaid({
               { text: 'Structural', link: '/cours/design-patterns/4-structural' },
               { text: 'Behavioral', link: '/cours/design-patterns/5-behavioral' },
             ]
+          },
+          {
+            text: 'Génie logiciel',
+            items: [
+              { text: 'Introduction', link: '/cours/genie-logiciel/introduction' },
+              { text: 'Simplicité et clarté', link: '/cours/genie-logiciel/simplicite-et-clarte' },
+              { text: 'Réutilisabilité et maintenabilité', link: '/cours/genie-logiciel/reutilisabilite-et-maintenabilite' },
+              { text: 'Conception orientée objet', link: '/cours/genie-logiciel/conception-orientee-objet' },
+              { text: 'Robustesse et gestion des erreurs', link: '/cours/genie-logiciel/robustesse-et-erreurs' },
+            ]
           }
         ]
       }
