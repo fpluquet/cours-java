@@ -498,41 +498,192 @@ class ElementConcretB implements Element {
 }
 ```
 
-## Interpreter
-Donne une représentation pour la grammaire d'un langage et un interprète pour traiter les phrases de ce langage.
 
-**Diagramme de classe :**
-```mermaid
-classDiagram
-    class Expression {
-        <<interface>>
-        +interpreter(context)
-    }
-    class ExpressionTerminale
-    class ExpressionNonTerminale
-    Expression <|.. ExpressionTerminale
-    Expression <|.. ExpressionNonTerminale
-```
-**Explication :**
-- `Expression` définit l'interface d'interprétation.
-- Les classes concrètes représentent des règles de la grammaire.
 
-**Exemple Java**
+## Double Dispatch
+Le double dispatch est un mécanisme qui permet de choisir dynamiquement quelle méthode exécuter en fonction **de deux types** à l'exécution (généralement le type de l'objet et celui d'un argument). En Java, le simple dispatch (liaison dynamique sur l'objet cible) est la règle, mais le double dispatch est simulé via certains patterns, notamment le Visitor.
+
+### Pourquoi le double dispatch ?
+Dans le simple dispatch, seule la classe de l'objet sur lequel on invoque la méthode détermine la méthode appelée. Mais parfois, on veut que le comportement dépende **à la fois** du type de l'objet ET du type d'un argument : c'est le double dispatch.
+
+### Exemple sans double dispatch
 ```java
-interface Expression {
-    int interpreter();
+class Animal {
+    void interagir(Animal a) {
+        System.out.println("Animal rencontre Animal");
+    }
 }
-class Nombre implements Expression {
-    private int valeur;
-    public Nombre(int v) { valeur = v; }
-    public int interpreter() { return valeur; }
+class Chat extends Animal {
+    void interagir(Animal a) {
+        System.out.println("Chat rencontre Animal");
+    }
 }
-class Addition implements Expression {
-    private Expression gauche, droite;
-    public Addition(Expression g, Expression d) { gauche = g; droite = d; }
-    public int interpreter() { return gauche.interpreter() + droite.interpreter(); }
+class Chien extends Animal {
+    void interagir(Animal a) {
+        System.out.println("Chien rencontre Animal");
+    }
 }
+// ...
+Animal a1 = new Chat();
+Animal a2 = new Chien();
+a1.interagir(a2); // Affiche "Chat rencontre Animal" (et non "Chat rencontre Chien")
 ```
+Ici, seule la classe de `a1` compte, pas celle de `a2`.
+
+### Double dispatch sans visiteur
+Voici un exemple de double dispatch pur, sans utiliser le pattern Visitor, mais en utilisant la délégation d'appels pour simuler le double dispatch. Cet exemple montre comment deux objets peuvent interagir en fonction de leurs types respectifs, sans avoir besoin de tests de type explicites.
+
+```java
+abstract class Animal {
+    abstract void interagir(Animal autre);
+    abstract void interagirAvecChat(Chat chat);
+    abstract void interagirAvecChien(Chien chien);
+}
+class Chat extends Animal {
+    void interagir(Animal autre) {
+        autre.interagirAvecChat(this);
+    }
+    void interagirAvecChat(Chat chat) {
+        System.out.println("Deux chats se croisent : indifférence.");
+    }
+    void interagirAvecChien(Chien chien) {
+        System.out.println("Le chat griffe le chien !");
+    }
+}
+class Chien extends Animal {
+    void interagir(Animal autre) {
+        autre.interagirAvecChien(this);
+    }
+    void interagirAvecChat(Chat chat) {
+        System.out.println("Le chien aboie sur le chat !");
+    }
+    void interagirAvecChien(Chien chien) {
+        System.out.println("Deux chiens se reniflent.");
+    }
+}
+// Utilisation
+Animal a1 = new Chat();
+Animal a2 = new Chien();
+a1.interagir(a2); // Affiche "Le chat griffe le chien !"
+a2.interagir(a1); // Affiche "Le chien aboie sur le chat !"
+```
+Ici, le double dispatch est obtenu sans aucun test de type, uniquement par la délégation des appels.
+
+**Diagramme de séquence :**
+```mermaid
+sequenceDiagram
+    participant main as main:Main
+    participant a1 as a1:Chat
+    participant a2 as a2:Chien
+
+    main->>a1: interagir(a2)
+    a1->>a2: interagirAvecChat(a1)
+    a2-->>a1: (retour)
+    a1-->>main: (retour)
+    Note right of main: Affiche "Le chat griffe le chien !"
+
+    main->>a2: interagir(a1)
+    a2->>a1: interagirAvecChien(a2)
+    a1-->>a2: (retour)
+    a2-->>main: (retour)
+    Note right of main: Affiche "Le chien aboie sur le chat !"
+```
+Ce diagramme montre comment l'appel est délégué à l'autre objet pour obtenir le double dispatch, et comment le comportement dépend des deux types dynamiques.
+
+### Double dispatch avec Visitor
+Pour obtenir un comportement dépendant des deux types, on utilise le Visitor :
+```java
+interface Animal {
+    void accepter(Interaction v);
+}
+class Chat implements Animal {
+    public void accepter(Interaction v) { v.interagirAvecChat(this); }
+}
+class Chien implements Animal {
+    public void accepter(Interaction v) { v.interagirAvecChien(this); }
+}
+interface Interaction {
+    void interagirAvecChat(Chat c);
+    void interagirAvecChien(Chien c);
+}
+class InteractionConcret implements Interaction {
+    public void interagirAvecChat(Chat c) {
+        System.out.println("On rencontre un chat");
+    }
+    public void interagirAvecChien(Chien c) {
+        System.out.println("On rencontre un chien");
+    }
+}
+
+class FaireParlerInteraction implements Interaction {
+    public void interagirAvecChat(Chat c) {
+        System.out.println("Le chat miaule");
+    }
+    public void interagirAvecChien(Chien c) {
+        System.out.println("Le chien aboie");
+    }
+}
+// Utilisation
+Animal a1 = new Chat();
+Animal a2 = new Chien();
+Interaction interaction = new InteractionConcret();
+a1.accepter(interaction); // Affiche "On rencontre un chat"
+a2.accepter(interaction); // Affiche "On rencontre un chien"
+
+// Avec une autre interaction
+Interaction interactionParler = new FaireParlerInteraction();
+a1.accepter(interactionParler); // Affiche "Le chat miaule"
+a2.accepter(interactionParler); // Affiche "Le chien aboie"
+```
+Ici, le type dynamique de `a1` et de `a2` sont tous deux pris en compte.
+
+**Diagramme de séquence :**
+```mermaid
+sequenceDiagram
+    participant main as main:Main
+    participant a1 as a1:Chat
+    participant a2 as a2:Chien
+    participant interaction as interaction:InteractionConcret
+
+    main->>a1: accepter(interaction)
+    a1->>interaction: interagirAvecChat(a1)
+    interaction-->>a1: (retour)
+    a1-->>main: (retour)
+    Note right of main: Affiche "On rencontre un chat"
+
+    main->>a2: accepter(interaction)
+    a2->>interaction: interagirAvecChien(a2)
+    interaction-->>a2: (retour)
+    a2-->>main: (retour)
+    Note right of main: Affiche "On rencontre un chien"
+```
+
+```mermaid
+sequenceDiagram
+    participant main as main:Main
+    participant a1 as a1:Chat
+    participant a2 as a2:Chien
+    participant interactionParler as interactionParler:FaireParlerInteraction
+
+    main->>a1: accepter(interactionParler)
+    a1->>interactionParler: interagirAvecChat(a1)
+    interactionParler-->>a1: (retour)
+    a1-->>main: (retour)
+    Note right of main: Affiche "Le chat miaule"
+
+    main->>a2: accepter(interactionParler)
+    a2->>interactionParler: interagirAvecChien(a2)
+    interactionParler-->>a2: (retour)
+    a2-->>main: (retour)
+    Note right of main: Affiche "Le chien aboie"
+```
+
+On voit ici que l'action est déterminée par le type de l'objet et le type de l'interaction, permettant ainsi un comportement flexible et extensible.
+
+> **À retenir :**
+> Le double dispatch permet de gérer des interactions complexes entre types, en déléguant la logique de décision à des classes spécifiques. Cela rend le code plus flexible et extensible, car on peut ajouter de nouveaux types d'interactions sans modifier les classes existantes.
+
+
 
 > **À retenir :**
 > Ces patterns avancés permettent de structurer des systèmes complexes et évolutifs.
