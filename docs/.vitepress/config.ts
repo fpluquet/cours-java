@@ -36,7 +36,6 @@ export default withMermaid({
               { text: 'Fichiers', link: '/cours/java/20-fichiers' },
               { text: 'Multithreading', link: '/cours/java/22-multithreading' },
               { text: 'Sockets et réseau', link: '/cours/java/23-sockets' },
-              { text: 'SOLID', link: '/cours/java/21-solid' },
             ]
           },
           {
