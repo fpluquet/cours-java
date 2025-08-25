@@ -9,7 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # 🔑 Autorise le push
+      contents: write   # Autorise le push
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
