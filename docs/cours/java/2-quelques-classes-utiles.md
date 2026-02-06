@@ -38,7 +38,6 @@ Lire ce que l’utilisateur saisit, c’est le rôle de la classe `Scanner` (du 
 - Son constructeur prend en argument un flux d’entrée (ici, la console) :
   ```java
   Scanner scanner = new Scanner(System.in);
-  //scanner.nextInt();
   String s = scanner.next();
   int i = scanner.nextInt();
   ```
