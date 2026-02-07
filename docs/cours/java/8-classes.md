@@ -64,7 +64,7 @@ Si vous ne définissez pas de constructeur, Java en crée un par défaut (sans a
 
 Parfois, on souhaite proposer plusieurs façons de créer un objet, avec plus ou moins d’informations. Pour éviter de répéter du code, on peut faire appel à la délégation de constructeurs : un constructeur peut en appeler un autre de la même classe, en passant des valeurs par défaut.
 
-**Attention : l’appel à un autre constructeur (`this(...)`) doit toujours être la première instruction du constructeur.**
+**Attention (avant Java 25) : l'appel à un autre constructeur (`this(...)`) doit toujours être la première instruction du constructeur.** _(Voir la section [Nouveauté Java 25](#nouveauté-java-25--corps-de-constructeurs-flexibles-flexible-constructor-bodies) pour l'évolution de cette règle.)_
 
 Exemple :
 
@@ -93,7 +93,62 @@ public class Personne{
 ::: tip Pourquoi déléguer ?
 Cela permet d’éviter la duplication de code et de centraliser la logique d’initialisation.
 :::
+### Nouveauté Java 25 : corps de constructeurs flexibles (Flexible Constructor Bodies)
 
+Avant Java 25, l'appel à `this(...)` ou `super(...)` **devait obligatoirement** être la première instruction d'un constructeur. Cela empêchait toute validation ou transformation des arguments avant la délégation.
+
+**Problème avant Java 25 :**
+
+```java
+public class Personne {
+    private String nom;
+
+    public Personne(String nom) {
+        // ❌ Impossible de valider `nom` avant d'appeler this(...) ou super(...)
+        // if (nom == null) throw new IllegalArgumentException("Le nom ne peut pas être null");
+        this.nom = nom;
+    }
+}
+```
+
+Avec Java 25 (JEP 513), on peut désormais écrire du code **avant** l'appel à `this(...)` ou `super(...)`, dans ce qu'on appelle le **prologue** du constructeur :
+
+```java
+public class Personne {
+    private String nom;
+    private String prenom;
+
+    public Personne(String nom) {
+        // ✅ Java 25 : on peut valider et transformer AVANT la délégation
+        if (nom == null) {
+            throw new IllegalArgumentException("Le nom ne peut pas être null");
+        }
+        String nomMajuscule = nom.toUpperCase();
+        this(nomMajuscule, "Inconnu"); // délégation après le prologue
+    }
+
+    public Personne(String nom, String prenom) {
+        this.nom = nom;
+        this.prenom = prenom;
+    }
+}
+```
+
+::: warning Restrictions dans le prologue
+Dans le prologue (avant `this(...)` ou `super(...)`), vous **ne pouvez pas** :
+- accéder à `this` (ni lire ni écrire les champs de l'instance en cours de construction)
+- appeler des méthodes d'instance
+
+Vous pouvez uniquement travailler avec les paramètres du constructeur et des variables locales.
+:::
+
+::: tip Comparaison
+| | Avant Java 25 | Java 25+ |
+|---|---|---|
+| Code avant `this(...)` / `super(...)` | ❌ Interdit | ✅ Autorisé (prologue) |
+| Validation des arguments | Après la délégation uniquement | Avant la délégation |
+| Accès à `this` dans le prologue | — | ❌ Interdit |
+:::
 ## Redéfinition (surcharge) de constructeur
 
 Il est possible de définir plusieurs constructeurs dans une même classe, à condition qu’ils aient des signatures différentes (nombre ou type des arguments). C’est ce qu’on appelle la **surcharge**.
