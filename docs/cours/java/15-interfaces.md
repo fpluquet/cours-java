@@ -94,6 +94,7 @@ System.out.println(((Carre)p).getCote()); // OK
 class Forme implements Perimetrable {
     protected Point centre;
     public Forme(Point c) { this.centre = c; }
+    @Override
     public double getPerimetre() { return 0; }
 }
 
@@ -104,6 +105,7 @@ class Rectangle extends Forme {
         this.largeur = largeur;
         this.longueur = longueur;
     }
+    @Override
     public double getPerimetre() { return 2 * (this.largeur + this.longueur); }
 }
 ```
@@ -235,12 +237,14 @@ interface CanalNotification {
 }
 
 class EmailNotification implements CanalNotification {
+    @Override
     public void envoyer(String message) {
         System.out.println("[EMAIL] " + message);
     }
 }
 
 class SMSNotification implements CanalNotification {
+    @Override
     public void envoyer(String message) {
         System.out.println("[SMS] " + message);
     }
@@ -378,3 +382,4 @@ Pour une explication complète des principes SOLID, voir le chapitre dédié.
 - **API Java** : De nombreuses API Java reposent sur les interfaces (`List`, `Map`, `Runnable`, etc.).
 
 N’hésitez pas à expérimenter avec vos propres interfaces pour bien comprendre leur utilité et leur puissance en Java !
+
