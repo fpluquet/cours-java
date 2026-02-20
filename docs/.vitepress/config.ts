@@ -33,9 +33,10 @@ export default withMermaid({
               { text: 'Classes internes', link: '/cours/java/17-classes-internes' },
               { text: 'Génériques', link: '/cours/java/18-generiques' },
               { text: 'Lambda', link: '/cours/java/19-lambda' },
-              { text: 'Fichiers', link: '/cours/java/20-fichiers' },
-              { text: 'Multithreading', link: '/cours/java/22-multithreading' },
-              { text: 'Sockets et réseau', link: '/cours/java/23-sockets' },
+              { text: 'Streams', link: '/cours/java/20-streams' },
+              { text: 'Fichiers', link: '/cours/java/21-fichiers' },
+              { text: 'Multithreading', link: '/cours/java/23-multithreading' },
+              { text: 'Sockets et réseau', link: '/cours/java/24-sockets' },
             ]
           },
           {
