@@ -276,6 +276,9 @@ var capitalize = function capitalize2(str) {
   }
   return str.charAt(0).toUpperCase() + str.substring(1);
 };
+var endsWith = function endsWith2(string3, suffix) {
+  return string3.slice(-1 * suffix.length) === suffix;
+};
 var number2 = "(?:[-+]?(?:(?:\\d+|\\d*\\.\\d+)(?:[Ee][+-]?\\d+)?))";
 var rgba = "rgb[a]?\\((" + number2 + "[%]?)\\s*,\\s*(" + number2 + "[%]?)\\s*,\\s*(" + number2 + "[%]?)(?:\\s*,\\s*(" + number2 + "))?\\)";
 var rgbaNoBackRefs = "rgb[a]?\\((?:" + number2 + "[%]?)\\s*,\\s*(?:" + number2 + "[%]?)\\s*,\\s*(?:" + number2 + "[%]?)(?:\\s*,\\s*(?:" + number2 + "))?\\)";
@@ -1028,6 +1031,34 @@ var hashStringsArray = function hashStringsArray2(strs) {
   }
   return hash;
 };
+function rotatePoint(x2, y2, centerX, centerY, angleDegrees) {
+  var angleRadians = angleDegrees * Math.PI / 180;
+  var rotatedX = Math.cos(angleRadians) * (x2 - centerX) - Math.sin(angleRadians) * (y2 - centerY) + centerX;
+  var rotatedY = Math.sin(angleRadians) * (x2 - centerX) + Math.cos(angleRadians) * (y2 - centerY) + centerY;
+  return {
+    x: rotatedX,
+    y: rotatedY
+  };
+}
+var movePointByBoxAspect = function movePointByBoxAspect2(x2, y2, boxX, boxY, skewX, skewY) {
+  return {
+    x: (x2 - boxX) * skewX + boxX,
+    y: (y2 - boxY) * skewY + boxY
+  };
+};
+function rotatePosAndSkewByBox(pos, box, angleDegrees) {
+  if (angleDegrees === 0) return pos;
+  var centerX = (box.x1 + box.x2) / 2;
+  var centerY = (box.y1 + box.y2) / 2;
+  var skewX = box.w / box.h;
+  var skewY = 1 / skewX;
+  var rotated = rotatePoint(pos.x, pos.y, centerX, centerY, angleDegrees);
+  var skewed = movePointByBoxAspect(rotated.x, rotated.y, centerX, centerY, skewX, skewY);
+  return {
+    x: skewed.x,
+    y: skewed.y
+  };
+}
 var warningsEnabled = true;
 var warnSupported = console.warn != null;
 var traceSupported = console.trace != null;
@@ -2474,6 +2505,7 @@ var elesfn$p = {
     return ret;
   }
 };
+var _Math$hypot;
 var copyPosition = function copyPosition2(p2) {
   return {
     x: p2.x,
@@ -2693,16 +2725,6 @@ var clearBoundingBox = function clearBoundingBox2(bb) {
   bb.w = 0;
   bb.h = 0;
 };
-var shiftBoundingBox = function shiftBoundingBox2(bb, dx, dy) {
-  return {
-    x1: bb.x1 + dx,
-    x2: bb.x2 + dx,
-    y1: bb.y1 + dy,
-    y2: bb.y2 + dy,
-    w: bb.w,
-    h: bb.h
-  };
-};
 var updateBoundingBox = function updateBoundingBox2(bb1, bb2) {
   bb1.x1 = Math.min(bb1.x1, bb2.x1);
   bb1.x2 = Math.max(bb1.x2, bb2.x2);
@@ -2796,6 +2818,106 @@ var pointInBoundingBox = function pointInBoundingBox2(bb, pt) {
 var boundingBoxInBoundingBox = function boundingBoxInBoundingBox2(bb1, bb2) {
   return inBoundingBox(bb1, bb2.x1, bb2.y1) && inBoundingBox(bb1, bb2.x2, bb2.y2);
 };
+var hypot = (_Math$hypot = Math.hypot) !== null && _Math$hypot !== void 0 ? _Math$hypot : function(x2, y2) {
+  return Math.sqrt(x2 * x2 + y2 * y2);
+};
+function inflatePolygon(polygon2, d) {
+  if (polygon2.length < 3) {
+    throw new Error("Need at least 3 vertices");
+  }
+  var add3 = function add4(a, b) {
+    return {
+      x: a.x + b.x,
+      y: a.y + b.y
+    };
+  };
+  var sub = function sub2(a, b) {
+    return {
+      x: a.x - b.x,
+      y: a.y - b.y
+    };
+  };
+  var scale2 = function scale3(v, s) {
+    return {
+      x: v.x * s,
+      y: v.y * s
+    };
+  };
+  var cross = function cross2(u, v) {
+    return u.x * v.y - u.y * v.x;
+  };
+  var normalize3 = function normalize4(v) {
+    var len = hypot(v.x, v.y);
+    return len === 0 ? {
+      x: 0,
+      y: 0
+    } : {
+      x: v.x / len,
+      y: v.y / len
+    };
+  };
+  var signedArea = function signedArea2(pts3) {
+    var A = 0;
+    for (var i2 = 0; i2 < pts3.length; i2++) {
+      var p3 = pts3[i2], q2 = pts3[(i2 + 1) % pts3.length];
+      A += p3.x * q2.y - q2.x * p3.y;
+    }
+    return A / 2;
+  };
+  var intersectLines = function intersectLines2(p1, p22, p3, p4) {
+    var r = sub(p22, p1);
+    var s = sub(p4, p3);
+    var denom = cross(r, s);
+    if (Math.abs(denom) < 1e-9) {
+      return add3(p1, scale2(r, 0.5));
+    }
+    var t = cross(sub(p3, p1), s) / denom;
+    return add3(p1, scale2(r, t));
+  };
+  var pts2 = polygon2.map(function(p3) {
+    return {
+      x: p3.x,
+      y: p3.y
+    };
+  });
+  if (signedArea(pts2) < 0) pts2.reverse();
+  var n = pts2.length;
+  var normals = [];
+  for (var i = 0; i < n; i++) {
+    var p2 = pts2[i], q = pts2[(i + 1) % n];
+    var edge = sub(q, p2);
+    var out = normalize3({
+      x: edge.y,
+      y: -edge.x
+    });
+    normals.push(out);
+  }
+  var offsetEdges = normals.map(function(nrm, i2) {
+    var p1 = add3(pts2[i2], scale2(nrm, d));
+    var p22 = add3(pts2[(i2 + 1) % n], scale2(nrm, d));
+    return {
+      p1,
+      p2: p22
+    };
+  });
+  var inflated = [];
+  for (var _i2 = 0; _i2 < n; _i2++) {
+    var prevEdge = offsetEdges[(_i2 - 1 + n) % n];
+    var currEdge = offsetEdges[_i2];
+    var ip = intersectLines(prevEdge.p1, prevEdge.p2, currEdge.p1, currEdge.p2);
+    inflated.push(ip);
+  }
+  return inflated;
+}
+function miterBox(pts2, centerX, centerY, width2, height2, strokeWidth) {
+  var tpts = transformPoints(pts2, centerX, centerY, width2, height2);
+  var offsetPoints = inflatePolygon(tpts, strokeWidth);
+  var bb = makeBoundingBox();
+  offsetPoints.forEach(function(pt) {
+    return expandBoundingBoxByPoint(bb, pt.x, pt.y);
+  });
+  return bb;
+}
 var roundRectangleIntersectLine = function roundRectangleIntersectLine2(x2, y2, nodeX, nodeY, width2, height2, padding) {
   var radius2 = arguments.length > 7 && arguments[7] !== void 0 ? arguments[7] : "auto";
   var cornerRadius = radius2 === "auto" ? getRoundRectangleRadius(width2, height2) : radius2;
@@ -3238,6 +3360,24 @@ var finiteLinesIntersect = function finiteLinesIntersect2(x1, y1, x2, y2, x3, y3
     }
   }
 };
+var transformPoints = function transformPoints2(points, centerX, centerY, width2, height2) {
+  var ret = [];
+  var halfW = width2 / 2;
+  var halfH = height2 / 2;
+  var x2 = centerX;
+  var y2 = centerY;
+  ret.push({
+    x: x2 + halfW * points[0],
+    y: y2 + halfH * points[1]
+  });
+  for (var i = 1; i < points.length / 2; i++) {
+    ret.push({
+      x: x2 + halfW * points[i * 2],
+      y: y2 + halfH * points[i * 2 + 1]
+    });
+  }
+  return ret;
+};
 var polygonIntersectLine = function polygonIntersectLine2(x2, y2, basePoints, centerX, centerY, width2, height2, padding) {
   var intersections = [];
   var intersection2;
@@ -3262,12 +3402,12 @@ var polygonIntersectLine = function polygonIntersectLine2(x2, y2, basePoints, ce
     points = basePoints;
   }
   var currentX, currentY, nextX, nextY;
-  for (var _i2 = 0; _i2 < points.length / 2; _i2++) {
-    currentX = points[_i2 * 2];
-    currentY = points[_i2 * 2 + 1];
-    if (_i2 < points.length / 2 - 1) {
-      nextX = points[(_i2 + 1) * 2];
-      nextY = points[(_i2 + 1) * 2 + 1];
+  for (var _i3 = 0; _i3 < points.length / 2; _i3++) {
+    currentX = points[_i3 * 2];
+    currentY = points[_i3 * 2 + 1];
+    if (_i3 < points.length / 2 - 1) {
+      nextX = points[(_i3 + 1) * 2];
+      nextY = points[(_i3 + 1) * 2 + 1];
     } else {
       nextX = points[0];
       nextY = points[1];
@@ -3307,11 +3447,11 @@ var roundPolygonIntersectLine = function roundPolygonIntersectLine2(x2, y2, base
   if (intersections.length > 2) {
     var lowestIntersection = [intersections[0], intersections[1]];
     var lowestSquaredDistance = Math.pow(lowestIntersection[0] - x2, 2) + Math.pow(lowestIntersection[1] - y2, 2);
-    for (var _i3 = 1; _i3 < intersections.length / 2; _i3++) {
-      var squaredDistance = Math.pow(intersections[_i3 * 2] - x2, 2) + Math.pow(intersections[_i3 * 2 + 1] - y2, 2);
+    for (var _i4 = 1; _i4 < intersections.length / 2; _i4++) {
+      var squaredDistance = Math.pow(intersections[_i4 * 2] - x2, 2) + Math.pow(intersections[_i4 * 2 + 1] - y2, 2);
       if (squaredDistance <= lowestSquaredDistance) {
-        lowestIntersection[0] = intersections[_i3 * 2];
-        lowestIntersection[1] = intersections[_i3 * 2 + 1];
+        lowestIntersection[0] = intersections[_i4 * 2];
+        lowestIntersection[1] = intersections[_i4 * 2 + 1];
         lowestSquaredDistance = squaredDistance;
       }
     }
@@ -3347,17 +3487,17 @@ var fitPolygonToSquare = function fitPolygonToSquare2(points) {
   }
   var sx = 2 / (maxX - minX);
   var sy = 2 / (maxY - minY);
-  for (var _i4 = 0; _i4 < sides; _i4++) {
-    x2 = points[2 * _i4] = points[2 * _i4] * sx;
-    y2 = points[2 * _i4 + 1] = points[2 * _i4 + 1] * sy;
+  for (var _i5 = 0; _i5 < sides; _i5++) {
+    x2 = points[2 * _i5] = points[2 * _i5] * sx;
+    y2 = points[2 * _i5 + 1] = points[2 * _i5 + 1] * sy;
     minX = Math.min(minX, x2);
     maxX = Math.max(maxX, x2);
     minY = Math.min(minY, y2);
     maxY = Math.max(maxY, y2);
   }
   if (minY < -1) {
-    for (var _i5 = 0; _i5 < sides; _i5++) {
-      y2 = points[2 * _i5 + 1] = points[2 * _i5 + 1] + (-1 - minY);
+    for (var _i6 = 0; _i6 < sides; _i6++) {
+      y2 = points[2 * _i6 + 1] = points[2 * _i6 + 1] + (-1 - minY);
     }
   }
   return points;
@@ -8959,40 +9099,38 @@ var updateBoundsFromOutline = function updateBoundsFromOutline2(bounds2, ele) {
   }
   var outlineOpacity = ele.pstyle("outline-opacity").value;
   var outlineWidth = ele.pstyle("outline-width").value;
-  if (outlineOpacity > 0 && outlineWidth > 0) {
-    var outlineOffset = ele.pstyle("outline-offset").value;
-    var nodeShape = ele.pstyle("shape").value;
-    var outlineSize = outlineWidth + outlineOffset;
-    var scaleX = (bounds2.w + outlineSize * 2) / bounds2.w;
-    var scaleY = (bounds2.h + outlineSize * 2) / bounds2.h;
-    var xOffset = 0;
-    var yOffset = 0;
-    if (["diamond", "pentagon", "round-triangle"].includes(nodeShape)) {
-      scaleX = (bounds2.w + outlineSize * 2.4) / bounds2.w;
-      yOffset = -outlineSize / 3.6;
-    } else if (["concave-hexagon", "rhomboid", "right-rhomboid"].includes(nodeShape)) {
-      scaleX = (bounds2.w + outlineSize * 2.4) / bounds2.w;
-    } else if (nodeShape === "star") {
-      scaleX = (bounds2.w + outlineSize * 2.8) / bounds2.w;
-      scaleY = (bounds2.h + outlineSize * 2.6) / bounds2.h;
-      yOffset = -outlineSize / 3.8;
-    } else if (nodeShape === "triangle") {
-      scaleX = (bounds2.w + outlineSize * 2.8) / bounds2.w;
-      scaleY = (bounds2.h + outlineSize * 2.4) / bounds2.h;
-      yOffset = -outlineSize / 1.4;
-    } else if (nodeShape === "vee") {
-      scaleX = (bounds2.w + outlineSize * 4.4) / bounds2.w;
-      scaleY = (bounds2.h + outlineSize * 3.8) / bounds2.h;
-      yOffset = -outlineSize * 0.5;
-    }
-    var hDelta = bounds2.h * scaleY - bounds2.h;
-    var wDelta = bounds2.w * scaleX - bounds2.w;
-    expandBoundingBoxSides(bounds2, [Math.ceil(hDelta / 2), Math.ceil(wDelta / 2)]);
-    if (xOffset != 0 || yOffset !== 0) {
-      var oBounds = shiftBoundingBox(bounds2, xOffset, yOffset);
-      updateBoundingBox(bounds2, oBounds);
-    }
+  var outlineOffset = ele.pstyle("outline-offset").value;
+  var expansion = outlineWidth + outlineOffset;
+  updateBoundsFromMiter(bounds2, ele, outlineOpacity, expansion, "outside", expansion / 2);
+};
+var updateBoundsFromMiter = function updateBoundsFromMiter2(bounds2, ele, opacity, expansionSize, expansionPosition, useFallbackValue) {
+  if (opacity === 0 || expansionSize <= 0 || expansionPosition === "inside") {
+    return;
   }
+  var cy = ele.cy();
+  var shape = ele.pstyle("shape").value;
+  var rshape = cy.renderer().nodeShapes[shape];
+  var _ele$position = ele.position(), x2 = _ele$position.x, y2 = _ele$position.y;
+  var w = ele.width();
+  var h = ele.height();
+  if (rshape.hasMiterBounds) {
+    if (expansionPosition === "center") {
+      expansionSize /= 2;
+    }
+    var mbb = rshape.miterBounds(x2, y2, w, h, expansionSize);
+    updateBoundsFromBox(bounds2, mbb);
+  } else if (useFallbackValue != null && useFallbackValue > 0) {
+    expandBoundingBoxSides(bounds2, [useFallbackValue, useFallbackValue, useFallbackValue, useFallbackValue]);
+  }
+};
+var updateBoundsFromMiterBorder = function updateBoundsFromMiterBorder2(bounds2, ele) {
+  if (ele.cy().headless()) {
+    return;
+  }
+  var borderOpacity = ele.pstyle("border-opacity").value;
+  var borderWidth = ele.pstyle("border-width").pfValue;
+  var borderPosition = ele.pstyle("border-position").value;
+  updateBoundsFromMiter(bounds2, ele, borderOpacity, borderWidth, borderPosition);
 };
 var boundingBoxImpl = function boundingBoxImpl2(ele, options2) {
   var cy = ele._private.cy;
@@ -9047,8 +9185,14 @@ var boundingBoxImpl = function boundingBoxImpl2(ele, options2) {
       ey1 = y2 - halfH;
       ey2 = y2 + halfH;
       updateBounds(bounds2, ex1, ey1, ex2, ey2);
-      if (styleEnabled2 && options2.includeOutlines) {
+      if (styleEnabled2) {
         updateBoundsFromOutline(bounds2, ele);
+      }
+      if (styleEnabled2 && options2.includeOutlines && !headless2) {
+        updateBoundsFromOutline(bounds2, ele);
+      }
+      if (styleEnabled2) {
+        updateBoundsFromMiterBorder(bounds2, ele);
       }
     } else if (isEdge2 && options2.includeEdges) {
       if (styleEnabled2 && !headless2) {
@@ -9081,7 +9225,7 @@ var boundingBoxImpl = function boundingBoxImpl2(ele, options2) {
             }
             updateBounds(bounds2, ex1 - wHalf, ey1 - wHalf, ex2 + wHalf, ey2 + wHalf);
           }
-        } else if (curveStyle === "bezier" || curveStyle === "unbundled-bezier" || curveStyle.endsWith("segments") || curveStyle.endsWith("taxi")) {
+        } else if (curveStyle === "bezier" || curveStyle === "unbundled-bezier" || endsWith(curveStyle, "segments") || endsWith(curveStyle, "taxi")) {
           var pts2;
           switch (curveStyle) {
             case "bezier":
@@ -14131,6 +14275,9 @@ var styfn$2 = {};
       enums: ["inside", "over"],
       multiple: true
     },
+    boxSelection: {
+      enums: ["contain", "overlap", "none"]
+    },
     color: {
       color: true
     },
@@ -14192,7 +14339,7 @@ var styfn$2 = {};
       enums: ["whitespace", "anywhere"]
     },
     textBackgroundShape: {
-      enums: ["rectangle", "roundrectangle", "round-rectangle"]
+      enums: ["rectangle", "roundrectangle", "round-rectangle", "circle"]
     },
     nodeShape: {
       enums: ["rectangle", "roundrectangle", "round-rectangle", "cutrectangle", "cut-rectangle", "bottomroundrectangle", "bottom-round-rectangle", "barrel", "ellipse", "triangle", "round-triangle", "square", "pentagon", "round-pentagon", "hexagon", "round-hexagon", "concavehexagon", "concave-hexagon", "heptagon", "round-heptagon", "octagon", "round-octagon", "tag", "round-tag", "star", "diamond", "round-diamond", "vee", "rhomboid", "right-rhomboid", "polygon"]
@@ -14541,6 +14688,10 @@ var styfn$2 = {};
   }, {
     name: "text-events",
     type: t.bool,
+    triggersZOrder: diff2.any
+  }, {
+    name: "box-selection",
+    type: t.boxSelection,
     triggersZOrder: diff2.any
   }];
   var visibility = [{
@@ -15189,6 +15340,7 @@ styfn$2.getDefaultProperties = function() {
     "text-justification": "auto",
     "line-height": 1,
     "color": "#000",
+    "box-selection": "contain",
     "text-outline-color": "#000",
     "text-outline-width": 0,
     "text-outline-opacity": 1,
@@ -16843,6 +16995,8 @@ var defaults$7 = {
   // whether to fit the viewport to the graph
   directed: false,
   // whether the tree is directed downwards (or edges can point in any direction if false)
+  direction: "downward",
+  // determines the direction in which the tree structure is drawn.  The possible values are 'downward', 'upward', 'rightward', or 'leftward'.
   padding: 30,
   // padding on fit
   circle: false,
@@ -16906,13 +17060,7 @@ BreadthFirstLayout.prototype.run = function() {
   var directed = options2.directed;
   var maximal = options2.acyclic || options2.maximal || options2.maximalAdjustments > 0;
   var hasBoundingBox = !!options2.boundingBox;
-  var cyExtent = cy.extent();
-  var bb = makeBoundingBox(hasBoundingBox ? options2.boundingBox : {
-    x1: cyExtent.x1,
-    y1: cyExtent.y1,
-    w: cyExtent.w,
-    h: cyExtent.h
-  });
+  var bb = makeBoundingBox(hasBoundingBox ? options2.boundingBox : structuredClone(cy.extent()));
   var roots;
   if (elementOrCollection(options2.roots)) {
     roots = options2.roots;
@@ -17156,7 +17304,7 @@ BreadthFirstLayout.prototype.run = function() {
   var maxDepthSize = depths.reduce(function(max5, eles2) {
     return Math.max(max5, eles2.length);
   }, 0);
-  var getPosition = function getPosition2(ele2) {
+  var getPositionTopBottom = function getPositionTopBottom2(ele2) {
     var _getInfo2 = getInfo(ele2), depth = _getInfo2.depth, index = _getInfo2.index;
     if (options2.circle) {
       var radiusStepSize = Math.min(bb.w / 2 / depthsLen, bb.h / 2 / depthsLen);
@@ -17186,6 +17334,18 @@ BreadthFirstLayout.prototype.run = function() {
       };
       return epos;
     }
+  };
+  var rotateDegrees = {
+    "downward": 0,
+    "leftward": 90,
+    "upward": 180,
+    "rightward": -90
+  };
+  if (Object.keys(rotateDegrees).indexOf(options2.direction) === -1) {
+    error("Invalid direction '".concat(options2.direction, "' specified for breadthfirst layout. Valid values are: ").concat(Object.keys(rotateDegrees).join(", ")));
+  }
+  var getPosition = function getPosition2(ele2) {
+    return rotatePosAndSkewByBox(getPositionTopBottom(ele2), bb, rotateDegrees[options2.direction]);
   };
   eles.nodes().layoutPositions(this, options2, getPosition);
   return this;
@@ -17849,8 +18009,8 @@ var getScaleInBoundsFn = function getScaleInBoundsFn2(layoutInfo, options2, node
   return function(ele, i) {
     var lnode = layoutInfo.layoutNodes[layoutInfo.idToIndex[ele.data("id")]];
     if (options2.boundingBox) {
-      var pctX = (lnode.positionX - coseBB.x1) / coseBB.w;
-      var pctY = (lnode.positionY - coseBB.y1) / coseBB.h;
+      var pctX = coseBB.w === 0 ? 0.5 : (lnode.positionX - coseBB.x1) / coseBB.w;
+      var pctY = coseBB.h === 0 ? 0.5 : (lnode.positionY - coseBB.y1) / coseBB.h;
       return {
         x: bb.x1 + pctX * bb.w,
         y: bb.y1 + pctY * bb.h
@@ -18662,7 +18822,7 @@ BRp$f.registerArrowShapes = function() {
       y: yTranslated
     };
   };
-  var transformPoints = function transformPoints2(pts2, size3, angle2, translation) {
+  var transformPoints3 = function transformPoints4(pts2, size3, angle2, translation) {
     var retPts = [];
     for (var i = 0; i < pts2.length; i += 2) {
       var x2 = pts2[i];
@@ -18690,13 +18850,13 @@ BRp$f.registerArrowShapes = function() {
       name,
       points: [-0.15, -0.3, 0.15, -0.3, 0.15, 0.3, -0.15, 0.3],
       collide: function collide(x2, y2, size3, angle2, translation, padding) {
-        var points = pointsToArr(transformPoints(this.points, size3 + 2 * padding, angle2, translation));
+        var points = pointsToArr(transformPoints3(this.points, size3 + 2 * padding, angle2, translation));
         var inside = pointInsidePolygonPoints(x2, y2, points);
         return inside;
       },
       roughCollide: bbCollide,
       draw: function draw(context, size3, angle2, translation) {
-        var points = transformPoints(this.points, size3, angle2, translation);
+        var points = transformPoints3(this.points, size3, angle2, translation);
         renderer3.arrowShapeImpl("polygon")(context, points);
       },
       spacing: function spacing(edge) {
@@ -18721,7 +18881,7 @@ BRp$f.registerArrowShapes = function() {
     controlPoint: [0, -0.15],
     roughCollide: bbCollide,
     draw: function draw(context, size3, angle2, translation, edgeWidth) {
-      var ptsTrans = transformPoints(this.points, size3, angle2, translation);
+      var ptsTrans = transformPoints3(this.points, size3, angle2, translation);
       var ctrlPt = this.controlPoint;
       var ctrlPtTrans = transform7(ctrlPt[0], ctrlPt[1], size3, angle2, translation);
       renderer3.arrowShapeImpl(this.name)(context, ptsTrans, ctrlPtTrans);
@@ -18734,14 +18894,14 @@ BRp$f.registerArrowShapes = function() {
     points: [0, 0, 0.15, -0.3, -0.15, -0.3, 0, 0],
     pointsTee: [-0.15, -0.4, -0.15, -0.5, 0.15, -0.5, 0.15, -0.4],
     collide: function collide(x2, y2, size3, angle2, translation, edgeWidth, padding) {
-      var triPts = pointsToArr(transformPoints(this.points, size3 + 2 * padding, angle2, translation));
-      var teePts = pointsToArr(transformPoints(this.pointsTee, size3 + 2 * padding, angle2, translation));
+      var triPts = pointsToArr(transformPoints3(this.points, size3 + 2 * padding, angle2, translation));
+      var teePts = pointsToArr(transformPoints3(this.pointsTee, size3 + 2 * padding, angle2, translation));
       var inside = pointInsidePolygonPoints(x2, y2, triPts) || pointInsidePolygonPoints(x2, y2, teePts);
       return inside;
     },
     draw: function draw(context, size3, angle2, translation, edgeWidth) {
-      var triPts = transformPoints(this.points, size3, angle2, translation);
-      var teePts = transformPoints(this.pointsTee, size3, angle2, translation);
+      var triPts = transformPoints3(this.points, size3, angle2, translation);
+      var teePts = transformPoints3(this.pointsTee, size3, angle2, translation);
       renderer3.arrowShapeImpl(this.name)(context, triPts, teePts);
     }
   });
@@ -18751,11 +18911,11 @@ BRp$f.registerArrowShapes = function() {
     collide: function collide(x2, y2, size3, angle2, translation, edgeWidth, padding) {
       var t = translation;
       var circleInside = Math.pow(t.x - x2, 2) + Math.pow(t.y - y2, 2) <= Math.pow((size3 + 2 * padding) * this.radius, 2);
-      var triPts = pointsToArr(transformPoints(this.points, size3 + 2 * padding, angle2, translation));
+      var triPts = pointsToArr(transformPoints3(this.points, size3 + 2 * padding, angle2, translation));
       return pointInsidePolygonPoints(x2, y2, triPts) || circleInside;
     },
     draw: function draw(context, size3, angle2, translation, edgeWidth) {
-      var triPts = transformPoints(this.pointsTr, size3, angle2, translation);
+      var triPts = transformPoints3(this.pointsTr, size3, angle2, translation);
       renderer3.arrowShapeImpl(this.name)(context, triPts, translation.x, translation.y, this.radius * size3);
     },
     spacing: function spacing(edge) {
@@ -18786,14 +18946,14 @@ BRp$f.registerArrowShapes = function() {
       return p2;
     },
     collide: function collide(x2, y2, size3, angle2, translation, edgeWidth, padding) {
-      var triPts = pointsToArr(transformPoints(this.points, size3 + 2 * padding, angle2, translation));
-      var teePts = pointsToArr(transformPoints(this.crossLinePts(size3, edgeWidth), size3 + 2 * padding, angle2, translation));
+      var triPts = pointsToArr(transformPoints3(this.points, size3 + 2 * padding, angle2, translation));
+      var teePts = pointsToArr(transformPoints3(this.crossLinePts(size3, edgeWidth), size3 + 2 * padding, angle2, translation));
       var inside = pointInsidePolygonPoints(x2, y2, triPts) || pointInsidePolygonPoints(x2, y2, teePts);
       return inside;
     },
     draw: function draw(context, size3, angle2, translation, edgeWidth) {
-      var triPts = transformPoints(this.points, size3, angle2, translation);
-      var crossLinePts = transformPoints(this.crossLinePts(size3, edgeWidth), size3, angle2, translation);
+      var triPts = transformPoints3(this.points, size3, angle2, translation);
+      var crossLinePts = transformPoints3(this.crossLinePts(size3, edgeWidth), size3, angle2, translation);
       renderer3.arrowShapeImpl(this.name)(context, triPts, crossLinePts);
     }
   });
@@ -19121,6 +19281,20 @@ BRp$e.getAllInBox = function(x1, y1, x2, y2) {
     x2,
     y2
   });
+  var selectionBox = [{
+    x: boxBb.x1,
+    y: boxBb.y1
+  }, {
+    x: boxBb.x2,
+    y: boxBb.y1
+  }, {
+    x: boxBb.x2,
+    y: boxBb.y2
+  }, {
+    x: boxBb.x1,
+    y: boxBb.y2
+  }];
+  var boxEdges = [[selectionBox[0], selectionBox[1]], [selectionBox[1], selectionBox[2]], [selectionBox[2], selectionBox[3]], [selectionBox[3], selectionBox[0]]];
   function preprop(obj, name, pre) {
     return getPrefixedProperty(obj, name, pre);
   }
@@ -19130,6 +19304,9 @@ BRp$e.getAllInBox = function(x1, y1, x2, y2) {
     var prefixDash = "";
     ele2.boundingBox();
     var bb = _p2.labelBounds["main"];
+    if (!bb) {
+      return null;
+    }
     var lx = preprop(_p2.rscratch, "labelX", prefix);
     var ly = preprop(_p2.rscratch, "labelY", prefix);
     var theta = preprop(_p2.rscratch, "labelAngle", prefix);
@@ -19167,60 +19344,146 @@ BRp$e.getAllInBox = function(x1, y1, x2, y2) {
       }];
     }
   }
+  function doLinesIntersect(p1, p2, q1, q2) {
+    function ccw(a, b2, c) {
+      return (c.y - a.y) * (b2.x - a.x) > (b2.y - a.y) * (c.x - a.x);
+    }
+    return ccw(p1, q1, q2) !== ccw(p2, q1, q2) && ccw(p1, p2, q1) !== ccw(p1, p2, q2);
+  }
   for (var e = 0; e < eles.length; e++) {
     var ele = eles[e];
     if (ele.isNode()) {
       var node = ele;
-      var eventsEnabled = node.pstyle("text-events").strValue === "yes";
-      var boxSelectEnabled = node.pstyle("box-select-labels").strValue === "yes";
+      var textEvents = node.pstyle("text-events").strValue === "yes";
+      var nodeBoxSelectMode = node.pstyle("box-selection").strValue;
+      var labelBoxSelectEnabled = node.pstyle("box-select-labels").strValue === "yes";
+      if (nodeBoxSelectMode === "none") {
+        continue;
+      }
+      var includeLabels = (nodeBoxSelectMode === "overlap" || labelBoxSelectEnabled) && textEvents;
       var nodeBb = node.boundingBox({
         includeNodes: true,
         includeEdges: false,
-        includeLabels: boxSelectEnabled && eventsEnabled
+        includeLabels
       });
-      if (boundingBoxesIntersect(boxBb, nodeBb)) {
-        var rotatedLabelBox = getRotatedLabelBox(node);
-        var selectionBox = [{
-          x: boxBb.x1,
-          y: boxBb.y1
-        }, {
-          x: boxBb.x2,
-          y: boxBb.y1
-        }, {
-          x: boxBb.x2,
-          y: boxBb.y2
-        }, {
-          x: boxBb.x1,
-          y: boxBb.y2
-        }];
-        if (satPolygonIntersection(rotatedLabelBox, selectionBox)) {
+      if (nodeBoxSelectMode === "contain") {
+        var selected = false;
+        if (labelBoxSelectEnabled && textEvents) {
+          var rotatedLabelBox = getRotatedLabelBox(node);
+          if (rotatedLabelBox && satPolygonIntersection(rotatedLabelBox, selectionBox)) {
+            box.push(node);
+            selected = true;
+          }
+        }
+        if (!selected && boundingBoxInBoundingBox(boxBb, nodeBb)) {
           box.push(node);
+        }
+      } else if (nodeBoxSelectMode === "overlap") {
+        if (boundingBoxesIntersect(boxBb, nodeBb)) {
+          var nodeBodyBb = node.boundingBox({
+            includeNodes: true,
+            includeEdges: true,
+            includeLabels: false,
+            includeMainLabels: false,
+            includeSourceLabels: false,
+            includeTargetLabels: false
+          });
+          var nodeBodyCorners = [{
+            x: nodeBodyBb.x1,
+            y: nodeBodyBb.y1
+          }, {
+            x: nodeBodyBb.x2,
+            y: nodeBodyBb.y1
+          }, {
+            x: nodeBodyBb.x2,
+            y: nodeBodyBb.y2
+          }, {
+            x: nodeBodyBb.x1,
+            y: nodeBodyBb.y2
+          }];
+          if (satPolygonIntersection(nodeBodyCorners, selectionBox)) {
+            box.push(node);
+          } else {
+            var _rotatedLabelBox = getRotatedLabelBox(node);
+            if (_rotatedLabelBox && satPolygonIntersection(_rotatedLabelBox, selectionBox)) {
+              box.push(node);
+            }
+          }
         }
       }
     } else {
       var edge = ele;
       var _p = edge._private;
       var rs = _p.rscratch;
-      if (rs.startX != null && rs.startY != null && !inBoundingBox(boxBb, rs.startX, rs.startY)) {
+      var edgeBoxSelectMode = edge.pstyle("box-selection").strValue;
+      if (edgeBoxSelectMode === "none") {
         continue;
       }
-      if (rs.endX != null && rs.endY != null && !inBoundingBox(boxBb, rs.endX, rs.endY)) {
-        continue;
-      }
-      if (rs.edgeType === "bezier" || rs.edgeType === "multibezier" || rs.edgeType === "self" || rs.edgeType === "compound" || rs.edgeType === "segments" || rs.edgeType === "haystack") {
-        var pts2 = _p.rstyle.bezierPts || _p.rstyle.linePts || _p.rstyle.haystackPts;
-        var allInside = true;
-        for (var i = 0; i < pts2.length; i++) {
-          if (!pointInBoundingBox(boxBb, pts2[i])) {
-            allInside = false;
-            break;
-          }
+      if (edgeBoxSelectMode === "contain") {
+        if (rs.startX != null && rs.startY != null && !inBoundingBox(boxBb, rs.startX, rs.startY)) {
+          continue;
         }
-        if (allInside) {
+        if (rs.endX != null && rs.endY != null && !inBoundingBox(boxBb, rs.endX, rs.endY)) {
+          continue;
+        }
+        if (rs.edgeType === "bezier" || rs.edgeType === "multibezier" || rs.edgeType === "self" || rs.edgeType === "compound" || rs.edgeType === "segments" || rs.edgeType === "haystack") {
+          var pts2 = _p.rstyle.bezierPts || _p.rstyle.linePts || _p.rstyle.haystackPts;
+          var allInside = true;
+          for (var i = 0; i < pts2.length; i++) {
+            if (!pointInBoundingBox(boxBb, pts2[i])) {
+              allInside = false;
+              break;
+            }
+          }
+          if (allInside) {
+            box.push(edge);
+          }
+        } else if (rs.edgeType === "straight") {
           box.push(edge);
         }
-      } else if (rs.edgeType === "haystack" || rs.edgeType === "straight") {
-        box.push(edge);
+      } else if (edgeBoxSelectMode === "overlap") {
+        var _selected = false;
+        if (rs.startX != null && rs.startY != null && rs.endX != null && rs.endY != null && (inBoundingBox(boxBb, rs.startX, rs.startY) || inBoundingBox(boxBb, rs.endX, rs.endY))) {
+          box.push(edge);
+          _selected = true;
+        } else if (!_selected && rs.edgeType === "haystack") {
+          var haystackPts = _p.rstyle.haystackPts;
+          for (var _i = 0; _i < haystackPts.length; _i++) {
+            if (pointInBoundingBox(boxBb, haystackPts[_i])) {
+              box.push(edge);
+              _selected = true;
+              break;
+            }
+          }
+        }
+        if (!_selected) {
+          var _pts = _p.rstyle.bezierPts || _p.rstyle.linePts || _p.rstyle.haystackPts;
+          if ((!_pts || _pts.length < 2) && rs.edgeType === "straight") {
+            if (rs.startX != null && rs.startY != null && rs.endX != null && rs.endY != null) {
+              _pts = [{
+                x: rs.startX,
+                y: rs.startY
+              }, {
+                x: rs.endX,
+                y: rs.endY
+              }];
+            }
+          }
+          if (!_pts || _pts.length < 2) continue;
+          for (var _i2 = 0; _i2 < _pts.length - 1; _i2++) {
+            var segStart = _pts[_i2];
+            var segEnd = _pts[_i2 + 1];
+            for (var b = 0; b < boxEdges.length; b++) {
+              var _boxEdges$b = _slicedToArray(boxEdges[b], 2), boxStart = _boxEdges$b[0], boxEnd = _boxEdges$b[1];
+              if (doLinesIntersect(segStart, segEnd, boxStart, boxEnd)) {
+                box.push(edge);
+                _selected = true;
+                break;
+              }
+            }
+            if (_selected) break;
+          }
+        }
       }
     }
   }
@@ -20011,7 +20274,7 @@ BRp$c.findEdgeControlPoints = function(edges3) {
       haystackEdges.push(edge);
       continue;
     }
-    var edgeIsUnbundled = curveStyle === "unbundled-bezier" || curveStyle.endsWith("segments") || curveStyle === "straight" || curveStyle === "straight-triangle" || curveStyle.endsWith("taxi");
+    var edgeIsUnbundled = curveStyle === "unbundled-bezier" || endsWith(curveStyle, "segments") || curveStyle === "straight" || curveStyle === "straight-triangle" || endsWith(curveStyle, "taxi");
     var edgeIsBezier = curveStyle === "unbundled-bezier" || curveStyle === "bezier";
     var src = _p.source;
     var tgt = _p.target;
@@ -20089,7 +20352,7 @@ BRp$c.findEdgeControlPoints = function(edges3) {
       var _edge = pairInfo.eles[_i2];
       var rs = _edge[0]._private.rscratch;
       var _curveStyle = _edge.pstyle("curve-style").value;
-      var _edgeIsUnbundled = _curveStyle === "unbundled-bezier" || _curveStyle.endsWith("segments") || _curveStyle.endsWith("taxi");
+      var _edgeIsUnbundled = _curveStyle === "unbundled-bezier" || endsWith(_curveStyle, "segments") || endsWith(_curveStyle, "taxi");
       var edgeIsSwapped = !src2.same(_edge.source());
       if (!pairInfo.calculatedIntersection && src2 !== tgt2 && (pairInfo.hasBezier || pairInfo.hasUnbundled)) {
         pairInfo.calculatedIntersection = true;
@@ -20274,6 +20537,7 @@ BRp$b.manualEndptToPx = function(node, prop) {
   }
 };
 BRp$b.findEndpoints = function(edge) {
+  var _ref, _tgtManEndpt$pfValue, _ref2, _srcManEndpt$pfValue;
   var r = this;
   var intersect2;
   var source = edge.source()[0];
@@ -20289,7 +20553,7 @@ BRp$b.findEndpoints = function(edge) {
   var curveStyle = edge.pstyle("curve-style").value;
   var rs = edge._private.rscratch;
   var et = rs.edgeType;
-  var taxi = curveStyle === "taxi";
+  var taxi = endsWith(curveStyle, "taxi");
   var self2 = et === "self" || et === "compound";
   var bezier = et === "bezier" || et === "multibezier" || self2;
   var multi = et !== "bezier";
@@ -20309,14 +20573,16 @@ BRp$b.findEndpoints = function(edge) {
   var p2;
   var p1_i;
   var p2_i;
+  var tgtManEndptPt = (_ref = (tgtManEndpt === null || tgtManEndpt === void 0 || (_tgtManEndpt$pfValue = tgtManEndpt.pfValue) === null || _tgtManEndpt$pfValue === void 0 ? void 0 : _tgtManEndpt$pfValue.length) === 2 ? tgtManEndpt.pfValue : null) !== null && _ref !== void 0 ? _ref : [0, 0];
+  var srcManEndptPt = (_ref2 = (srcManEndpt === null || srcManEndpt === void 0 || (_srcManEndpt$pfValue = srcManEndpt.pfValue) === null || _srcManEndpt$pfValue === void 0 ? void 0 : _srcManEndpt$pfValue.length) === 2 ? srcManEndpt.pfValue : null) !== null && _ref2 !== void 0 ? _ref2 : [0, 0];
   if (bezier) {
     var cpStart = [rs.ctrlpts[0], rs.ctrlpts[1]];
     var cpEnd = multi ? [rs.ctrlpts[rs.ctrlpts.length - 2], rs.ctrlpts[rs.ctrlpts.length - 1]] : cpStart;
     p1 = cpEnd;
     p2 = cpStart;
   } else if (lines) {
-    var srcArrowFromPt = !segments ? [tgtPos.x, tgtPos.y] : rs.segpts.slice(0, 2);
-    var tgtArrowFromPt = !segments ? [srcPos.x, srcPos.y] : rs.segpts.slice(rs.segpts.length - 2);
+    var srcArrowFromPt = !segments ? [tgtPos.x + tgtManEndptPt[0], tgtPos.y + tgtManEndptPt[1]] : rs.segpts.slice(0, 2);
+    var tgtArrowFromPt = !segments ? [srcPos.x + srcManEndptPt[0], srcPos.y + srcManEndptPt[1]] : rs.segpts.slice(rs.segpts.length - 2);
     p1 = tgtArrowFromPt;
     p2 = srcArrowFromPt;
   }
@@ -21546,6 +21812,16 @@ BRp$3.load = function() {
     var draggedElements = r.dragData.possibleDragElements;
     r.hoverData.mdownPos = pos;
     r.hoverData.mdownGPos = gpos;
+    var makeEvent = function makeEvent2(type) {
+      return {
+        originalEvent: e,
+        type,
+        position: {
+          x: pos[0],
+          y: pos[1]
+        }
+      };
+    };
     var checkForTaphold = function checkForTaphold2() {
       r.hoverData.tapholdCancelled = false;
       clearTimeout(r.hoverData.tapholdTimeout);
@@ -21555,23 +21831,9 @@ BRp$3.load = function() {
         } else {
           var ele = r.hoverData.down;
           if (ele) {
-            ele.emit({
-              originalEvent: e,
-              type: "taphold",
-              position: {
-                x: pos[0],
-                y: pos[1]
-              }
-            });
+            ele.emit(makeEvent("taphold"));
           } else {
-            cy.emit({
-              originalEvent: e,
-              type: "taphold",
-              position: {
-                x: pos[0],
-                y: pos[1]
-              }
-            });
+            cy.emit(makeEvent("taphold"));
           }
         }
       }, r.tapholdDuration);
@@ -21602,16 +21864,6 @@ BRp$3.load = function() {
       {
         if (near != null) {
           if (r.nodeIsGrabbable(near)) {
-            var makeEvent = function makeEvent2(type) {
-              return {
-                originalEvent: e,
-                type,
-                position: {
-                  x: pos[0],
-                  y: pos[1]
-                }
-              };
-            };
             var triggerGrab = function triggerGrab2(ele) {
               ele.emit(makeEvent("grab"));
             };
@@ -21711,17 +21963,20 @@ BRp$3.load = function() {
       x: pos[0],
       y: pos[1]
     });
+    var makeEvent = function makeEvent2(type) {
+      return {
+        originalEvent: e,
+        type,
+        position: {
+          x: pos[0],
+          y: pos[1]
+        }
+      };
+    };
     var goIntoBoxMode = function goIntoBoxMode2() {
       r.data.bgActivePosistion = void 0;
       if (!r.hoverData.selecting) {
-        cy.emit({
-          originalEvent: e,
-          type: "boxstart",
-          position: {
-            x: pos[0],
-            y: pos[1]
-          }
-        });
+        cy.emit(makeEvent("boxstart"));
       }
       select[4] = 1;
       r.hoverData.selecting = true;
@@ -21730,14 +21985,7 @@ BRp$3.load = function() {
     };
     if (r.hoverData.which === 3) {
       if (isOverThresholdDrag) {
-        var cxtEvt = {
-          originalEvent: e,
-          type: "cxtdrag",
-          position: {
-            x: pos[0],
-            y: pos[1]
-          }
-        };
+        var cxtEvt = makeEvent("cxtdrag");
         if (down) {
           down.emit(cxtEvt);
         } else {
@@ -21746,25 +21994,11 @@ BRp$3.load = function() {
         r.hoverData.cxtDragged = true;
         if (!r.hoverData.cxtOver || near !== r.hoverData.cxtOver) {
           if (r.hoverData.cxtOver) {
-            r.hoverData.cxtOver.emit({
-              originalEvent: e,
-              type: "cxtdragout",
-              position: {
-                x: pos[0],
-                y: pos[1]
-              }
-            });
+            r.hoverData.cxtOver.emit(makeEvent("cxtdragout"));
           }
           r.hoverData.cxtOver = near;
           if (near) {
-            near.emit({
-              originalEvent: e,
-              type: "cxtdragover",
-              position: {
-                x: pos[0],
-                y: pos[1]
-              }
-            });
+            near.emit(makeEvent("cxtdragover"));
           }
         }
       }
@@ -21786,7 +22020,7 @@ BRp$3.load = function() {
           };
         }
         cy.panBy(deltaP);
-        cy.emit("dragpan");
+        cy.emit(makeEvent("dragpan"));
         r.hoverData.dragged = true;
       }
       pos = r.projectIntoViewport(e.clientX, e.clientY);
@@ -21833,11 +22067,11 @@ BRp$3.load = function() {
           if (cy.boxSelectionEnabled() && multSelKeyDown) {
             if (down && down.grabbed()) {
               freeDraggedElements(draggedElements);
-              down.emit("freeon");
-              draggedElements.emit("free");
+              down.emit(makeEvent("freeon"));
+              draggedElements.emit(makeEvent("free"));
               if (r.dragData.didDrag) {
-                down.emit("dragfreeon");
-                draggedElements.emit("dragfree");
+                down.emit(makeEvent("dragfreeon"));
+                draggedElements.emit(makeEvent("dragfree"));
               }
             }
             goIntoBoxMode();
@@ -21868,7 +22102,7 @@ BRp$3.load = function() {
               }
             }
             r.hoverData.draggingEles = true;
-            draggedElements.silentShift(totalShift).emit("position drag");
+            draggedElements.silentShift(totalShift).emit(makeEvent("position")).emit(makeEvent("drag"));
             r.redrawHint("drag", true);
             r.redraw();
           }
@@ -21912,29 +22146,25 @@ BRp$3.load = function() {
     if (down) {
       down.unactivate();
     }
-    if (r.hoverData.which === 3) {
-      var cxtEvt = {
+    var makeEvent = function makeEvent2(type) {
+      return {
         originalEvent: e,
-        type: "cxttapend",
+        type,
         position: {
           x: pos[0],
           y: pos[1]
         }
       };
+    };
+    if (r.hoverData.which === 3) {
+      var cxtEvt = makeEvent("cxttapend");
       if (down) {
         down.emit(cxtEvt);
       } else {
         cy.emit(cxtEvt);
       }
       if (!r.hoverData.cxtDragged) {
-        var cxtTap = {
-          originalEvent: e,
-          type: "cxttap",
-          position: {
-            x: pos[0],
-            y: pos[1]
-          }
-        };
+        var cxtTap = makeEvent("cxttap");
         if (down) {
           down.emit(cxtTap);
         } else {
@@ -22007,24 +22237,17 @@ BRp$3.load = function() {
         if (box.length > 0) {
           r.redrawHint("eles", true);
         }
-        cy.emit({
-          type: "boxend",
-          originalEvent: e,
-          position: {
-            x: pos[0],
-            y: pos[1]
-          }
-        });
+        cy.emit(makeEvent("boxend"));
         var eleWouldBeSelected = function eleWouldBeSelected2(ele) {
           return ele.selectable() && !ele.selected();
         };
         if (cy.selectionType() === "additive") {
-          box.emit("box").stdFilter(eleWouldBeSelected).select().emit("boxselect");
+          box.emit(makeEvent("box")).stdFilter(eleWouldBeSelected).select().emit(makeEvent("boxselect"));
         } else {
           if (!multSelKeyDown) {
             cy.$(isSelected).unmerge(box).unselect();
           }
-          box.emit("box").stdFilter(eleWouldBeSelected).select().emit("boxselect");
+          box.emit(makeEvent("box")).stdFilter(eleWouldBeSelected).select().emit(makeEvent("boxselect"));
         }
         r.redraw();
       }
@@ -22040,11 +22263,11 @@ BRp$3.load = function() {
         var downWasGrabbed = down && down.grabbed();
         freeDraggedElements(draggedElements);
         if (downWasGrabbed) {
-          down.emit("freeon");
-          draggedElements.emit("free");
+          down.emit(makeEvent("freeon"));
+          draggedElements.emit(makeEvent("free"));
           if (r.dragData.didDrag) {
-            down.emit("dragfreeon");
-            draggedElements.emit("dragfree");
+            down.emit(makeEvent("dragfreeon"));
+            draggedElements.emit(makeEvent("dragfree"));
           }
         }
       }
@@ -22092,6 +22315,9 @@ BRp$3.load = function() {
       } else if (e.wheelDelta != null) {
         delta = e.wheelDelta / 4;
       }
+    }
+    if (delta === 0) {
+      return;
     }
     if (inaccurateScrollDevice == null) {
       if (wheelDeltas.length >= wheelDeltaN) {
@@ -22159,7 +22385,14 @@ BRp$3.load = function() {
           y: rpos[1]
         }
       });
-      cy.emit(e.type === "gesturechange" ? "pinchzoom" : "scrollzoom");
+      cy.emit({
+        type: e.type === "gesturechange" ? "pinchzoom" : "scrollzoom",
+        originalEvent: e,
+        position: {
+          x: pos[0],
+          y: pos[1]
+        }
+      });
     }
   };
   r.registerBinding(r.container, "wheel", wheelHandler, true);
@@ -22242,6 +22475,16 @@ BRp$3.load = function() {
       now[4] = pos[0];
       now[5] = pos[1];
     }
+    var makeEvent = function makeEvent2(type) {
+      return {
+        originalEvent: e,
+        type,
+        position: {
+          x: now[0],
+          y: now[1]
+        }
+      };
+    };
     if (e.touches[1]) {
       r.touchData.singleTouchMoved = true;
       freeDraggedElements(r.dragData.touchDragEles);
@@ -22267,34 +22510,13 @@ BRp$3.load = function() {
         var near1 = r.findNearestElement(now[0], now[1], true, true);
         var near2 = r.findNearestElement(now[2], now[3], true, true);
         if (near1 && near1.isNode()) {
-          near1.activate().emit({
-            originalEvent: e,
-            type: "cxttapstart",
-            position: {
-              x: now[0],
-              y: now[1]
-            }
-          });
+          near1.activate().emit(makeEvent("cxttapstart"));
           r.touchData.start = near1;
         } else if (near2 && near2.isNode()) {
-          near2.activate().emit({
-            originalEvent: e,
-            type: "cxttapstart",
-            position: {
-              x: now[0],
-              y: now[1]
-            }
-          });
+          near2.activate().emit(makeEvent("cxttapstart"));
           r.touchData.start = near2;
         } else {
-          cy.emit({
-            originalEvent: e,
-            type: "cxttapstart",
-            position: {
-              x: now[0],
-              y: now[1]
-            }
-          });
+          cy.emit(makeEvent("cxttapstart"));
         }
         if (r.touchData.start) {
           r.touchData.start._private.grabbed = false;
@@ -22336,16 +22558,6 @@ BRp$3.load = function() {
             });
           }
           setGrabTarget(near);
-          var makeEvent = function makeEvent2(type) {
-            return {
-              originalEvent: e,
-              type,
-              position: {
-                x: now[0],
-                y: now[1]
-              }
-            };
-          };
           near.emit(makeEvent("grabon"));
           if (selectedNodes) {
             selectedNodes.forEach(function(n) {
@@ -22415,6 +22627,16 @@ BRp$3.load = function() {
       now[4] = pos[0];
       now[5] = pos[1];
     }
+    var makeEvent = function makeEvent2(type) {
+      return {
+        originalEvent: e,
+        type,
+        position: {
+          x: now[0],
+          y: now[1]
+        }
+      };
+    };
     var startGPos = r.touchData.startGPosition;
     var isOverThresholdDrag;
     if (capture && e.touches[0] && startGPos) {
@@ -22443,14 +22665,7 @@ BRp$3.load = function() {
         r.touchData.cxt = false;
         r.data.bgActivePosistion = void 0;
         r.redrawHint("select", true);
-        var cxtEvt = {
-          originalEvent: e,
-          type: "cxttapend",
-          position: {
-            x: now[0],
-            y: now[1]
-          }
-        };
+        var cxtEvt = makeEvent("cxttapend");
         if (r.touchData.start) {
           r.touchData.start.unactivate().emit(cxtEvt);
           r.touchData.start = null;
@@ -22460,14 +22675,7 @@ BRp$3.load = function() {
       }
     }
     if (capture && r.touchData.cxt) {
-      var cxtEvt = {
-        originalEvent: e,
-        type: "cxtdrag",
-        position: {
-          x: now[0],
-          y: now[1]
-        }
-      };
+      var cxtEvt = makeEvent("cxtdrag");
       r.data.bgActivePosistion = void 0;
       r.redrawHint("select", true);
       if (r.touchData.start) {
@@ -22482,25 +22690,11 @@ BRp$3.load = function() {
       var near = r.findNearestElement(now[0], now[1], true, true);
       if (!r.touchData.cxtOver || near !== r.touchData.cxtOver) {
         if (r.touchData.cxtOver) {
-          r.touchData.cxtOver.emit({
-            originalEvent: e,
-            type: "cxtdragout",
-            position: {
-              x: now[0],
-              y: now[1]
-            }
-          });
+          r.touchData.cxtOver.emit(makeEvent("cxtdragout"));
         }
         r.touchData.cxtOver = near;
         if (near) {
-          near.emit({
-            originalEvent: e,
-            type: "cxtdragover",
-            position: {
-              x: now[0],
-              y: now[1]
-            }
-          });
+          near.emit(makeEvent("cxtdragover"));
         }
       }
     } else if (capture && e.touches[2] && cy.boxSelectionEnabled()) {
@@ -22508,14 +22702,7 @@ BRp$3.load = function() {
       r.data.bgActivePosistion = void 0;
       this.lastThreeTouch = +/* @__PURE__ */ new Date();
       if (!r.touchData.selecting) {
-        cy.emit({
-          originalEvent: e,
-          type: "boxstart",
-          position: {
-            x: now[0],
-            y: now[1]
-          }
-        });
+        cy.emit(makeEvent("boxstart"));
       }
       r.touchData.selecting = true;
       r.touchData.didSelect = true;
@@ -22570,11 +22757,11 @@ BRp$3.load = function() {
           freeDraggedElements(draggedEles);
           r.redrawHint("drag", true);
           r.redrawHint("eles", true);
-          _start.unactivate().emit("freeon");
-          draggedEles.emit("free");
+          _start.unactivate().emit(makeEvent("freeon"));
+          draggedEles.emit(makeEvent("free"));
           if (r.dragData.didDrag) {
-            _start.emit("dragfreeon");
-            draggedEles.emit("dragfree");
+            _start.emit(makeEvent("dragfreeon"));
+            draggedEles.emit(makeEvent("dragfree"));
           }
         }
         cy.viewport({
@@ -22582,7 +22769,7 @@ BRp$3.load = function() {
           pan: pan2,
           cancelOnFailedZoom: true
         });
-        cy.emit("pinchzoom");
+        cy.emit(makeEvent("pinchzoom"));
         distance1 = distance2;
         f1x1 = f1x2;
         f1y1 = f1y2;
@@ -22642,7 +22829,7 @@ BRp$3.load = function() {
             }
           }
           r.hoverData.draggingEles = true;
-          draggedEles.silentShift(totalShift).emit("position drag");
+          draggedEles.silentShift(totalShift).emit(makeEvent("position")).emit(makeEvent("drag"));
           r.redrawHint("drag", true);
           if (r.touchData.startPosition[0] == earlier[0] && r.touchData.startPosition[1] == earlier[1]) {
             r.redrawHint("eles", true);
@@ -22666,24 +22853,10 @@ BRp$3.load = function() {
         });
         if ((!start || !start.grabbed()) && near != last2) {
           if (last2) {
-            last2.emit({
-              originalEvent: e,
-              type: "tapdragout",
-              position: {
-                x: now[0],
-                y: now[1]
-              }
-            });
+            last2.emit(makeEvent("tapdragout"));
           }
           if (near) {
-            near.emit({
-              originalEvent: e,
-              type: "tapdragover",
-              position: {
-                x: now[0],
-                y: now[1]
-              }
-            });
+            near.emit(makeEvent("tapdragover"));
           }
         }
         r.touchData.last = near;
@@ -22707,14 +22880,14 @@ BRp$3.load = function() {
               x: disp[0] * zoom2,
               y: disp[1] * zoom2
             });
-            cy.emit("dragpan");
+            cy.emit(makeEvent("dragpan"));
           } else if (isOverThresholdDrag) {
             r.swipePanning = true;
             cy.panBy({
               x: dx * zoom2,
               y: dy * zoom2
             });
-            cy.emit("dragpan");
+            cy.emit(makeEvent("dragpan"));
             if (start) {
               start.unactivate();
               r.redrawHint("select", true);
@@ -22778,33 +22951,29 @@ BRp$3.load = function() {
       now[4] = pos[0];
       now[5] = pos[1];
     }
-    if (start) {
-      start.unactivate();
-    }
-    var ctxTapend;
-    if (r.touchData.cxt) {
-      ctxTapend = {
+    var makeEvent = function makeEvent2(type) {
+      return {
         originalEvent: e,
-        type: "cxttapend",
+        type,
         position: {
           x: now[0],
           y: now[1]
         }
       };
+    };
+    if (start) {
+      start.unactivate();
+    }
+    var ctxTapend;
+    if (r.touchData.cxt) {
+      ctxTapend = makeEvent("cxttapend");
       if (start) {
         start.emit(ctxTapend);
       } else {
         cy.emit(ctxTapend);
       }
       if (!r.touchData.cxtDragged) {
-        var ctxTap = {
-          originalEvent: e,
-          type: "cxttap",
-          position: {
-            x: now[0],
-            y: now[1]
-          }
-        };
+        var ctxTap = makeEvent("cxttap");
         if (start) {
           start.emit(ctxTap);
         } else {
@@ -22828,18 +22997,11 @@ BRp$3.load = function() {
       select[3] = void 0;
       select[4] = 0;
       r.redrawHint("select", true);
-      cy.emit({
-        type: "boxend",
-        originalEvent: e,
-        position: {
-          x: now[0],
-          y: now[1]
-        }
-      });
+      cy.emit(makeEvent("boxend"));
       var eleWouldBeSelected = function eleWouldBeSelected2(ele) {
         return ele.selectable() && !ele.selected();
       };
-      box.emit("box").stdFilter(eleWouldBeSelected).select().emit("boxselect");
+      box.emit(makeEvent("box")).stdFilter(eleWouldBeSelected).select().emit(makeEvent("boxselect"));
       if (box.nonempty()) {
         r.redrawHint("eles", true);
       }
@@ -22863,11 +23025,11 @@ BRp$3.load = function() {
         r.redrawHint("drag", true);
         r.redrawHint("eles", true);
         if (startWasGrabbed) {
-          start.emit("freeon");
-          draggedEles.emit("free");
+          start.emit(makeEvent("freeon"));
+          draggedEles.emit(makeEvent("free"));
           if (r.dragData.didDrag) {
-            start.emit("dragfreeon");
-            draggedEles.emit("dragfree");
+            start.emit(makeEvent("dragfreeon"));
+            draggedEles.emit(makeEvent("dragfree"));
           }
         }
         triggerEvents(start, ["touchend", "tapend", "vmouseup", "tapdragout"], e, {
@@ -23051,6 +23213,10 @@ BRp$2.generatePolygon = function(name, points) {
     },
     checkPoint: function checkPoint(x2, y2, padding, width2, height2, centerX, centerY, cornerRadius) {
       return pointInsidePolygon(x2, y2, this.points, centerX, centerY, width2, height2, [0, -1], padding);
+    },
+    hasMiterBounds: name !== "rectangle",
+    miterBounds: function miterBounds(centerX, centerY, width2, height2, strokeWidth, strokePosition) {
+      return miterBox(this.points, centerX, centerY, width2, height2, strokeWidth);
     }
   };
 };
@@ -24807,7 +24973,7 @@ function circleTriangle(context, trianglePoints, rx, ry, r) {
     context.closePath();
   }
 }
-function circle(context, rx, ry, r) {
+function circle$1(context, rx, ry, r) {
   context.arc(rx, ry, r, 0, Math.PI * 2, false);
 }
 CRp$b.arrowShapeImpl = function(name) {
@@ -24817,7 +24983,7 @@ CRp$b.arrowShapeImpl = function(name) {
     "triangle-tee": triangleTee,
     "circle-triangle": circleTriangle,
     "triangle-cross": triangleTee,
-    "circle": circle
+    "circle": circle$1
   }))[name];
 };
 var CRp$a = {};
@@ -25558,22 +25724,29 @@ CRp$7.setupTextStyle = function(context, ele) {
   this.colorFillStyle(context, color[0], color[1], color[2], opacity);
   this.colorStrokeStyle(context, outlineColor[0], outlineColor[1], outlineColor[2], outlineOpacity);
 };
+function circle(ctx, x2, y2, width2, height2) {
+  var diameter = Math.min(width2, height2);
+  var radius2 = diameter / 2;
+  var centerX = x2 + width2 / 2;
+  var centerY = y2 + height2 / 2;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius2, 0, Math.PI * 2);
+  ctx.closePath();
+}
 function roundRect(ctx, x2, y2, width2, height2) {
   var radius2 = arguments.length > 5 && arguments[5] !== void 0 ? arguments[5] : 5;
-  var stroke = arguments.length > 6 ? arguments[6] : void 0;
+  var r = Math.min(radius2, width2 / 2, height2 / 2);
   ctx.beginPath();
-  ctx.moveTo(x2 + radius2, y2);
-  ctx.lineTo(x2 + width2 - radius2, y2);
-  ctx.quadraticCurveTo(x2 + width2, y2, x2 + width2, y2 + radius2);
-  ctx.lineTo(x2 + width2, y2 + height2 - radius2);
-  ctx.quadraticCurveTo(x2 + width2, y2 + height2, x2 + width2 - radius2, y2 + height2);
-  ctx.lineTo(x2 + radius2, y2 + height2);
-  ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - radius2);
-  ctx.lineTo(x2, y2 + radius2);
-  ctx.quadraticCurveTo(x2, y2, x2 + radius2, y2);
+  ctx.moveTo(x2 + r, y2);
+  ctx.lineTo(x2 + width2 - r, y2);
+  ctx.quadraticCurveTo(x2 + width2, y2, x2 + width2, y2 + r);
+  ctx.lineTo(x2 + width2, y2 + height2 - r);
+  ctx.quadraticCurveTo(x2 + width2, y2 + height2, x2 + width2 - r, y2 + height2);
+  ctx.lineTo(x2 + r, y2 + height2);
+  ctx.quadraticCurveTo(x2, y2 + height2, x2, y2 + height2 - r);
+  ctx.lineTo(x2, y2 + r);
+  ctx.quadraticCurveTo(x2, y2, x2 + r, y2);
   ctx.closePath();
-  if (stroke) ctx.stroke();
-  else ctx.fill();
 }
 CRp$7.getTextAngle = function(ele, prefix) {
   var theta;
@@ -25652,9 +25825,18 @@ CRp$7.drawText = function(context, ele, prefix) {
     var textBorderWidth = ele.pstyle("text-border-width").pfValue;
     var backgroundPadding = ele.pstyle("text-background-padding").pfValue;
     var styleShape = ele.pstyle("text-background-shape").strValue;
-    var rounded = styleShape.indexOf("round") === 0;
+    var rounded = styleShape === "round-rectangle" || styleShape === "roundrectangle";
+    var circled = styleShape === "circle";
     var roundRadius = 2;
     if (backgroundOpacity > 0 || textBorderWidth > 0 && borderOpacity > 0) {
+      var textFill = context.fillStyle;
+      var textStroke = context.strokeStyle;
+      var textLineWidth = context.lineWidth;
+      var textBackgroundColor = ele.pstyle("text-background-color").value;
+      var textBorderColor = ele.pstyle("text-border-color").value;
+      var textBorderStyle = ele.pstyle("text-border-style").value;
+      var doFill = backgroundOpacity > 0;
+      var doStroke = textBorderWidth > 0 && borderOpacity > 0;
       var bgX = textX - backgroundPadding;
       switch (halign) {
         case "left":
@@ -25667,23 +25849,11 @@ CRp$7.drawText = function(context, ele, prefix) {
       var bgY = textY - textH - backgroundPadding;
       var bgW = textW + 2 * backgroundPadding;
       var bgH = textH + 2 * backgroundPadding;
-      if (backgroundOpacity > 0) {
-        var textFill = context.fillStyle;
-        var textBackgroundColor = ele.pstyle("text-background-color").value;
-        context.fillStyle = "rgba(" + textBackgroundColor[0] + "," + textBackgroundColor[1] + "," + textBackgroundColor[2] + "," + backgroundOpacity * parentOpacity + ")";
-        if (rounded) {
-          roundRect(context, bgX, bgY, bgW, bgH, roundRadius);
-        } else {
-          context.fillRect(bgX, bgY, bgW, bgH);
-        }
-        context.fillStyle = textFill;
+      if (doFill) {
+        context.fillStyle = "rgba(".concat(textBackgroundColor[0], ",").concat(textBackgroundColor[1], ",").concat(textBackgroundColor[2], ",").concat(backgroundOpacity * parentOpacity, ")");
       }
-      if (textBorderWidth > 0 && borderOpacity > 0) {
-        var textStroke = context.strokeStyle;
-        var textLineWidth = context.lineWidth;
-        var textBorderColor = ele.pstyle("text-border-color").value;
-        var textBorderStyle = ele.pstyle("text-border-style").value;
-        context.strokeStyle = "rgba(" + textBorderColor[0] + "," + textBorderColor[1] + "," + textBorderColor[2] + "," + borderOpacity * parentOpacity + ")";
+      if (doStroke) {
+        context.strokeStyle = "rgba(".concat(textBorderColor[0], ",").concat(textBorderColor[1], ",").concat(textBorderColor[2], ",").concat(borderOpacity * parentOpacity, ")");
         context.lineWidth = textBorderWidth;
         if (context.setLineDash) {
           switch (textBorderStyle) {
@@ -25698,29 +25868,38 @@ CRp$7.drawText = function(context, ele, prefix) {
               context.setLineDash([]);
               break;
             case "solid":
+            default:
               context.setLineDash([]);
               break;
           }
         }
-        if (rounded) {
-          roundRect(context, bgX, bgY, bgW, bgH, roundRadius, "stroke");
-        } else {
-          context.strokeRect(bgX, bgY, bgW, bgH);
-        }
-        if (textBorderStyle === "double") {
-          var whiteWidth = textBorderWidth / 2;
-          if (rounded) {
-            roundRect(context, bgX + whiteWidth, bgY + whiteWidth, bgW - whiteWidth * 2, bgH - whiteWidth * 2, roundRadius, "stroke");
-          } else {
-            context.strokeRect(bgX + whiteWidth, bgY + whiteWidth, bgW - whiteWidth * 2, bgH - whiteWidth * 2);
-          }
-        }
-        if (context.setLineDash) {
-          context.setLineDash([]);
-        }
-        context.lineWidth = textLineWidth;
-        context.strokeStyle = textStroke;
       }
+      if (rounded) {
+        context.beginPath();
+        roundRect(context, bgX, bgY, bgW, bgH, roundRadius);
+      } else if (circled) {
+        context.beginPath();
+        circle(context, bgX, bgY, bgW, bgH);
+      } else {
+        context.beginPath();
+        context.rect(bgX, bgY, bgW, bgH);
+      }
+      if (doFill) context.fill();
+      if (doStroke) context.stroke();
+      if (doStroke && textBorderStyle === "double") {
+        var whiteWidth = textBorderWidth / 2;
+        context.beginPath();
+        if (rounded) {
+          roundRect(context, bgX + whiteWidth, bgY + whiteWidth, bgW - 2 * whiteWidth, bgH - 2 * whiteWidth, roundRadius);
+        } else {
+          context.rect(bgX + whiteWidth, bgY + whiteWidth, bgW - 2 * whiteWidth, bgH - 2 * whiteWidth);
+        }
+        context.stroke();
+      }
+      context.fillStyle = textFill;
+      context.strokeStyle = textStroke;
+      context.lineWidth = textLineWidth;
+      if (context.setLineDash) context.setLineDash([]);
     }
     var lineWidth = 2 * ele.pstyle("text-outline-width").pfValue;
     if (lineWidth > 0) {
@@ -27975,7 +28154,7 @@ var ElementDrawingWebGL = function() {
      * @property { string } collection - name of atlas collection to render textures to
      * @property { function } getKey - returns the "style key" for an element, may be a single value or an array for multi-line lables
      * @property { function } drawElement - uses a canvas renderer to draw the element to the texture atlas
-     * @property { boolean  } drawClipped - if true the context will be clipped to the bounding box before drawElement() is called, may affect performance 
+     * @property { boolean  } drawClipped - if true the context will be clipped to the bounding box before drawElement() is called, may affect performance
      * @property { function } getBoundingBox - returns the bounding box for an element
      * @property { function } getRotation
      * @property { function } getRotationPoint
@@ -28109,7 +28288,7 @@ var ElementDrawingWebGL = function() {
       var _this = this;
       if (!this._buffers) {
         this._buffers = Object.keys(this).filter(function(k) {
-          return k.endsWith("Buffer");
+          return endsWith(k, "Buffer");
         }).map(function(k) {
           return _this[k];
         });
@@ -28158,6 +28337,9 @@ var ElementDrawingWebGL = function() {
       var atlasManager = this.atlasManager, batchManager = this.batchManager;
       var opts = atlasManager.getRenderTypeOpts(type);
       if (!this._isVisible(ele, opts)) {
+        return;
+      }
+      if (ele.isEdge() && !this._isValidEdge(ele)) {
         return;
       }
       if (this.renderTarget.picking && opts.getTexPickingMode) {
@@ -28541,10 +28723,19 @@ var ElementDrawingWebGL = function() {
       }
     }
   }, {
+    key: "_isValidEdge",
+    value: function _isValidEdge(edge) {
+      var rs = edge._private.rscratch;
+      if (rs.badLine || rs.allpts == null || isNaN(rs.allpts[0])) {
+        return false;
+      }
+      return true;
+    }
+  }, {
     key: "_getEdgePoints",
     value: function _getEdgePoints(edge) {
       var rs = edge._private.rscratch;
-      if (rs.badLine || rs.allpts == null || isNaN(rs.allpts[0])) {
+      if (!this._isValidEdge(edge)) {
         return;
       }
       var controlPoints3 = rs.allpts;
@@ -30041,7 +30232,7 @@ sheetfn.appendToStyle = function(style3) {
   }
   return style3;
 };
-var version = "3.32.0";
+var version = "3.33.1";
 var cytoscape = function cytoscape2(options2) {
   if (options2 === void 0) {
     options2 = {};

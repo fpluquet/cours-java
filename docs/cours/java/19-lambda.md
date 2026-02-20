@@ -601,7 +601,56 @@ Optional<Integer> minimum = nombres.stream()
 *Essayez de remplacer une classe anonyme par une lambda, et observez la différence de syntaxe et de lisibilité !*
 ## Exercices de compréhension
 
-### Exercice 1 : Identifier le type d'interface fonctionnelle
+### Exercice 1 : Déterminer si c'est une interface fonctionnelle
+
+Parmi les interfaces suivantes, lesquelles sont des interfaces fonctionnelles ? Justifiez.
+
+```java
+// 1
+interface A {
+    void methode1();
+}
+
+// 2
+interface B {
+    void methode1();
+    void methode2();
+}
+
+// 3
+interface C {
+    void methode1();
+    default void methode2() { }
+}
+
+// 4
+interface D {
+    void methode1();
+    static void methode2() { }
+}
+
+// 5
+interface E extends Runnable {
+    void methode1();
+}
+
+// 6
+interface F extends Runnable {
+    default void run() { }
+    void methode1();
+}
+```
+
+::: details Suggestions des réponses
+1. ✅ Oui — une seule méthode abstraite
+2. ❌ Non — deux méthodes abstraites
+3. ✅ Oui — une seule méthode abstraite (`methode2` a une implémentation par défaut)
+4. ✅ Oui — une seule méthode abstraite (`methode2` est statique, pas abstraite)
+5. ❌ Non — deux méthodes abstraites (`methode1` de E et `run()` héritée de Runnable)
+6. ✅ Oui — une seule méthode abstraite (`methode1`), car `run()` a une implémentation `default`
+:::
+
+### Exercice 2 : Identifier le type d'interface fonctionnelle
 
 Pour chacune des lambdas suivantes, indiquez quelle interface fonctionnelle du package `java.util.function` (ou autre) pourrait servir de type à la variable :
 
@@ -642,51 +691,6 @@ __________ test8 = (String s, Integer n) -> s.repeat(n);
 8. `BiFunction<String, Integer, String>` — prend deux paramètres de types différents, retourne un `String`
 :::
 
-### Exercice 2 : Compléter les lambdas dans des Streams
-
-Complétez les lambdas manquantes dans les pipelines suivants :
-
-```java
-List<String> noms = Arrays.asList("Alice", "Bob", "Charlie", "Diana", "Eve");
-
-// 1. Filtrer les noms de plus de 3 caractères
-List<String> longs = noms.stream()
-    .filter(_______________)
-    .collect(Collectors.toList());
-
-// 2. Transformer chaque nom en majuscule
-List<String> majuscules = noms.stream()
-    .map(_______________)
-    .collect(Collectors.toList());
-
-// 3. Trier par longueur décroissante
-List<String> tries = noms.stream()
-    .sorted(_______________)
-    .collect(Collectors.toList());
-
-// 4. Vérifier si tous les noms commencent par une majuscule
-boolean tousCapitalized = noms.stream()
-    .allMatch(_______________);
-
-// 5. Concaténer tous les noms avec " - " comme séparateur
-String resultat = noms.stream()
-    .collect(_______________);
-
-// 6. Calculer la somme des longueurs de tous les noms
-int sommeLongueurs = noms.stream()
-    .map(_______________)
-    .reduce(0, _______________);
-```
-
-::: details Suggestions des réponses
-1. `n -> n.length() > 3`
-2. `String::toUpperCase` (ou `s -> s.toUpperCase()`)
-3. `(a, b) -> Integer.compare(b.length(), a.length())` (ou `Comparator.comparing(String::length).reversed()`)
-4. `n -> Character.isUpperCase(n.charAt(0))`
-5. `Collectors.joining(" - ")`
-6. `String::length` puis `Integer::sum` (ou `s -> s.length()` puis `(a, b) -> a + b`)
-:::
-
 ### Exercice 3 : Écrire des lambdas à partir d'interfaces
 
 Proposez une lambda pour chacune des interfaces ou types suivants :
@@ -724,7 +728,46 @@ Supplier<List<Integer>> listeFournisseur = ____________________________;
 6. `() -> Arrays.asList(1, 2, 3)`
 :::
 
-### Exercice 4 : Composition de fonctions et prédicats
+### Exercice 4 : Références de méthode
+
+Réécrivez chaque lambda en utilisant une **référence de méthode** (`::`) :
+
+```java
+// 1
+Function<String, Integer> f1 = s -> s.length();
+Function<String, Integer> f1bis = ___________________;
+
+// 2
+Consumer<String> c1 = s -> System.out.println(s);
+Consumer<String> c1bis = ___________________;
+
+// 3
+Function<String, String> f2 = s -> s.toUpperCase();
+Function<String, String> f2bis = ___________________;
+
+// 4
+Supplier<ArrayList<String>> s1 = () -> new ArrayList<>();
+Supplier<ArrayList<String>> s1bis = ___________________;
+
+// 5
+BinaryOperator<Integer> b1 = (a, b) -> Integer.max(a, b);
+BinaryOperator<Integer> b1bis = ___________________;
+
+// 6
+Function<String, Integer> f3 = s -> Integer.parseInt(s);
+Function<String, Integer> f3bis = ___________________;
+```
+
+::: details Suggestions des réponses
+1. `String::length`
+2. `System.out::println`
+3. `String::toUpperCase`
+4. `ArrayList::new`
+5. `Integer::max`
+6. `Integer::parseInt`
+:::
+
+### Exercice 5 : Composition de fonctions et prédicats
 
 Indiquez le résultat de chaque expression :
 
@@ -774,92 +817,49 @@ Function<String, String> trimPuisUpper = trim.andThen(upper);
 7. `"HELLO"` — d'abord `trim` donne `"hello"`, puis `toUpperCase` donne `"HELLO"`
 :::
 
-### Exercice 5 : Déterminer si c'est une interface fonctionnelle
+### Exercice 6 : Compléter les lambdas dans les Streams
 
-Parmi les interfaces suivantes, lesquelles sont des interfaces fonctionnelles ? Justifiez.
+Complétez les lambdas manquantes dans les pipelines suivants :
 
 ```java
-// 1
-interface A {
-    void methode1();
-}
+List<String> noms = Arrays.asList("Alice", "Bob", "Charlie", "Diana", "Eve");
 
-// 2
-interface B {
-    void methode1();
-    void methode2();
-}
+// 1. Filtrer les noms de plus de 3 caractères
+List<String> longs = noms.stream()
+    .filter(_______________)
+    .collect(Collectors.toList());
 
-// 3
-interface C {
-    void methode1();
-    default void methode2() { }
-}
+// 2. Transformer chaque nom en majuscule
+List<String> majuscules = noms.stream()
+    .map(_______________)
+    .collect(Collectors.toList());
 
-// 4
-interface D {
-    void methode1();
-    static void methode2() { }
-}
+// 3. Trier par longueur décroissante
+List<String> tries = noms.stream()
+    .sorted(_______________)
+    .collect(Collectors.toList());
 
-// 5
-interface E extends Runnable {
-    void methode1();
-}
+// 4. Vérifier si tous les noms commencent par une majuscule
+boolean tousCapitalized = noms.stream()
+    .allMatch(_______________);
 
-// 6
-interface F extends Runnable {
-    default void run() { }
-    void methode1();
-}
+// 5. Concaténer tous les noms avec " - " comme séparateur
+String resultat = noms.stream()
+    .collect(_______________);
+
+// 6. Calculer la somme des longueurs de tous les noms
+int sommeLongueurs = noms.stream()
+    .map(_______________)
+    .reduce(0, _______________);
 ```
 
 ::: details Suggestions des réponses
-1. ✅ Oui — une seule méthode abstraite
-2. ❌ Non — deux méthodes abstraites
-3. ✅ Oui — une seule méthode abstraite (`methode2` a une implémentation par défaut)
-4. ✅ Oui — une seule méthode abstraite (`methode2` est statique, pas abstraite)
-5. ❌ Non — deux méthodes abstraites (`methode1` de E et `run()` héritée de Runnable)
-6. ✅ Oui — une seule méthode abstraite (`methode1`), car `run()` a une implémentation `default`
-:::
-
-### Exercice 6 : Références de méthode
-
-Réécrivez chaque lambda en utilisant une **référence de méthode** (`::`) :
-
-```java
-// 1
-Function<String, Integer> f1 = s -> s.length();
-Function<String, Integer> f1bis = ___________________;
-
-// 2
-Consumer<String> c1 = s -> System.out.println(s);
-Consumer<String> c1bis = ___________________;
-
-// 3
-Function<String, String> f2 = s -> s.toUpperCase();
-Function<String, String> f2bis = ___________________;
-
-// 4
-Supplier<ArrayList<String>> s1 = () -> new ArrayList<>();
-Supplier<ArrayList<String>> s1bis = ___________________;
-
-// 5
-BinaryOperator<Integer> b1 = (a, b) -> Integer.max(a, b);
-BinaryOperator<Integer> b1bis = ___________________;
-
-// 6
-Function<String, Integer> f3 = s -> Integer.parseInt(s);
-Function<String, Integer> f3bis = ___________________;
-```
-
-::: details Suggestions des réponses
-1. `String::length`
-2. `System.out::println`
-3. `String::toUpperCase`
-4. `ArrayList::new`
-5. `Integer::max`
-6. `Integer::parseInt`
+1. `n -> n.length() > 3`
+2. `String::toUpperCase` (ou `s -> s.toUpperCase()`)
+3. `(a, b) -> Integer.compare(b.length(), a.length())` (ou `Comparator.comparing(String::length).reversed()`)
+4. `n -> Character.isUpperCase(n.charAt(0))`
+5. `Collectors.joining(" - ")`
+6. `String::length` puis `Integer::sum` (ou `s -> s.length()` puis `(a, b) -> a + b`)
 :::
 
 ### Exercice 7 : Lire et comprendre un pipeline Stream
